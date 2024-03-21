@@ -5,6 +5,8 @@
 
 #AppSettings
 **/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Production.json
 
 #Keystore file
 **/key.keystore
