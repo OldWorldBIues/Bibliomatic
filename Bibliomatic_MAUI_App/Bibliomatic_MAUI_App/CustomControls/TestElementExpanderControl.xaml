@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.TestElementExpanderControl">
+
+    <ContentView.ControlTemplate>
+        
+        <ControlTemplate>
+
+            <toolkit:Expander x:Name="TestElementExpander"                              
+                              IsExpanded="{TemplateBinding ElementExpanded}">                
+                
+                <toolkit:Expander.Header>
+
+                    <Border StrokeThickness="1"
+                            Padding="5"                             
+                            BackgroundColor="{AppThemeBinding Light=AliceBlue, Dark=#00d18c}">
+                        
+                        <Grid ColumnDefinitions="*, Auto">
+                            
+                            <Label Grid.Column="0" 
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"
+                                   FontAttributes="Bold"
+                                   Text="{TemplateBinding ExpanderHeader}" 
+                                   TextColor="#000e09"
+                                   FontSize="15"/>
+
+                            <Image x:Name="TestElementExpanderImage"                                   
+                                   Grid.Column="1"                                    
+                                   WidthRequest="30" 
+                                   HeightRequest="30">
+
+                                <Image.Triggers>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference TestElementExpander}, Path=IsExpanded}" Value="False">
+                                        <Setter Property="Source" Value="expander_arrow_right.svg"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference TestElementExpander}, Path=IsExpanded}" Value="True">
+                                        <Setter Property="Source" Value="expander_arrow_down.svg"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                                
+                            </Image>
+
+                        </Grid>
+                        
+                    </Border>
+                    
+                </toolkit:Expander.Header>
+
+                <Border StrokeThickness="1"
+                        Padding="{TemplateBinding ContentPadding}"
+                        IsVisible="{TemplateBinding ContentBorderVisible}">
+                    
+                    <ContentPresenter/>
+                    
+                </Border>
+
+            </toolkit:Expander>
+
+        </ControlTemplate>
+        
+    </ContentView.ControlTemplate>
+   
+</ContentView>

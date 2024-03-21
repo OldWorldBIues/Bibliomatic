@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.TestElementHeaderControl">
+
+    <ContentView.ControlTemplate>
+        
+        <ControlTemplate>
+            
+            <Grid Padding="15"                  
+                  ColumnDefinitions="*, Auto">
+
+                <Label VerticalTextAlignment="Center" 
+                       Grid.Column="0" FontSize="15" 
+                       FontAttributes="Bold" 
+                       Text="{TemplateBinding Header}"/>
+
+
+                <ContentPresenter  Grid.Column="1"/>                
+
+            </Grid>
+            
+        </ControlTemplate>
+        
+    </ContentView.ControlTemplate>  
+    
+</ContentView>

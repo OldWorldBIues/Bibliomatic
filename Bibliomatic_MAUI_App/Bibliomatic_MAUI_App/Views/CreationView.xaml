@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:selectors="clr-namespace:Bibliomatic_MAUI_App.Selectors"
+             x:Class="Bibliomatic_MAUI_App.Views.CreationView"
+             Title="CreationView"
+             x:Name="CreationViewPage"
+             Shell.NavBarIsVisible="False">   
+
+    <ContentPage.Resources>
+        
+        <DataTemplate x:Key="ArticleTemplate" x:DataType="models:CreationElement">
+            <StackLayout Padding="5">
+                <Border Style="{StaticResource defaultBorder}" Padding="10">
+                    <StackLayout>
+                        <Label Text="{Binding Text}"/>
+                        <Image Margin="0,10,0,0" Source="{Binding Image}"/>
+                    </StackLayout>
+                </Border>
+                <Button Text="To article creation"
+                        Margin="0,10"
+                        Command="{Binding Source={x:Reference CreationViewPage}, Path=BindingContext.NavigateToArticleInformationViewCommand}"/>
+            </StackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TestTemplate" x:DataType="models:CreationElement">
+            <StackLayout Padding="5">
+                <Border Style="{StaticResource defaultBorder}" Padding="10">
+                    <StackLayout>
+                        <Label Text="{Binding Text}"/>
+                        <Image Margin="0,10,0,0" Source="{Binding Image}"/>
+                    </StackLayout>
+                </Border>
+                <Button Text="To test creation"
+                        Margin="0,10"
+                        Command="{Binding Source={x:Reference CreationViewPage}, Path=BindingContext.NavigateToTestInformationViewCommand}"/>
+            </StackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="QuestionTemplate" x:DataType="models:CreationElement">
+            <StackLayout Padding="5"> 
+                <Border Style="{StaticResource defaultBorder}" Padding="10">
+                    <StackLayout>
+                        <Label Text="{Binding Text}"/>
+                        <Image Margin="0,10,0,0" Source="{Binding Image}"/>
+                    </StackLayout>
+                </Border>
+                <Button Text="To question creation"
+                        Margin="0,10"
+                        Command="{Binding Source={x:Reference CreationViewPage}, Path=BindingContext.NavigateToQuestionInformationViewCommand}"/>
+            </StackLayout>
+        </DataTemplate>
+
+        <selectors:CarouselViewCreationDataTemplateSelector x:Key="CreationElementTemplateSelector"
+                                                            ArticleTemplate="{x:StaticResource ArticleTemplate}"
+                                                            TestTemplate="{x:StaticResource TestTemplate}"
+                                                            QuestionTemplate="{x:StaticResource QuestionTemplate}"/>       
+
+    </ContentPage.Resources>
+
+
+    <StackLayout Padding="10" VerticalOptions="Center">        
+        <Label Text="Create content" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+        <CarouselView ItemTemplate="{StaticResource CreationElementTemplateSelector}"  
+                      IndicatorView="CarouselIndicator">
+            <CarouselView.ItemsSource>
+                <x:Array Type="{x:Type models:CreationElement}">
+                    <models:CreationElement Text="Create your own article and share your knowledges. Just come up with the title of the article, its description and upload it in a format convenient for you and everyone will be able to see your interesting and useful work"
+                                            Image="article_icon.png"
+                                            ElementType="Article"/>
+                    <models:CreationElement Text="Create a test to your liking using different types of questions and content. Anything you want to create an effective knowledge test"
+                                            Image="test_icon.png"
+                                            ElementType="Test"/>
+                    <models:CreationElement Text="You can ask your own question on a topic that interests you. Use a variety of tools to format your text and add different elements. Just ask and people will definitely help you solve your problem"
+                                            Image="question_icon.png"
+                                            ElementType="Question"/>
+                </x:Array>
+            </CarouselView.ItemsSource>
+        </CarouselView>
+        <IndicatorView x:Name="CarouselIndicator"
+                       Margin="5,10"
+                       IndicatorColor="{AppThemeBinding Dark={StaticResource BlackThemeButtonBackgroundColor}, Light={StaticResource Primary}}"                       
+                       SelectedIndicatorColor="{AppThemeBinding Light=Black, Dark=White}"
+                       HorizontalOptions="Center"/>       
+    </StackLayout>
+</ContentPage>

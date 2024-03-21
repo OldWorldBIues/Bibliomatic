@@ -1,0 +1,4 @@
+\left ( \frac{a}{b} \right );Parenthesis;brackets_1_b.svg;2
+\left[ \frac{a}{b} \right];Bracket;brackets_2_b.svg;2
+\left \langle \frac{a}{b} \right \rangle;Angle bracket;brackets_3_b.svg;2
+\left\{ \frac{a}{b} \right\};Brace;brackets_4_b.svg;2

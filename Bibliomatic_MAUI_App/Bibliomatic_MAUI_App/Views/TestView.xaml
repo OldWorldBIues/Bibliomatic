@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Bibliomatic_MAUI_App.Views.TestView"
+             xmlns:converters="clr-namespace:Bibliomatic_MAUI_App.Converters"
+             xmlns:behaviors="clr-namespace:Bibliomatic_MAUI_App.Behaviors"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:viewModel="clr-namespace:Bibliomatic_MAUI_App.ViewModels" 
+             xmlns:selectors="clr-namespace:Bibliomatic_MAUI_App.Selectors"               
+             x:DataType="viewModel:TestViewModel"
+             x:Name="TestViewPage"             
+             Title="Test"
+             Shell.NavBarIsVisible="True">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding ReturnBackCommand}"/>
+    </Shell.BackButtonBehavior>
+
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+            <converters:IsDefaultImageConverter x:Key="IsDefaultImageConverter"/>
+            <toolkit:IsNullConverter x:Key="IsNullConverter"/>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>            
+        </ResourceDictionary>
+       
+        <DataTemplate x:Key="OneAnswerQuestion" x:DataType="models:TestAnswerResponse">
+
+            <StackLayout>
+                <RadioButton IsChecked="{Binding IsSelected}" Content="{Binding Answer}" GroupName="{Binding TestQuestionId}"/>   
+                
+                <customControls:TestElementExpanderControl ExpanderHeader="Answer image">
+                    <customControls:TestElementExpanderControl.Triggers>
+                        <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                     Binding="{Binding TestAnswerImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </customControls:TestElementExpanderControl.Triggers>
+                    <Image Margin="10" x:Name="TestAnswerImage" Source="{Binding TestAnswerImageFilepath}" HeightRequest="350"/>                 
+                </customControls:TestElementExpanderControl>
+                
+                <customControls:TestElementExpanderControl ExpanderHeader="Answer formula image">
+                    <customControls:TestElementExpanderControl.Triggers>
+                        <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                     Binding="{Binding TestAnswerFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </customControls:TestElementExpanderControl.Triggers>
+                    <Image Margin="10" x:Name="TestAnswerFormulaImage" Source="{Binding TestAnswerFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                </customControls:TestElementExpanderControl>
+            </StackLayout>
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="MultipleAnswerQuestion" x:DataType="models:TestAnswerResponse">
+
+            <StackLayout>
+                <Grid ColumnDefinitions="Auto, *">
+                    <CheckBox IsChecked="{Binding IsSelected}" Grid.Column="0" Grid.Row="0"/>
+                    <Label VerticalTextAlignment="Center" Text="{Binding Answer}" Grid.Column="1" Grid.Row="0"/>
+                </Grid>
+                
+                <customControls:TestElementExpanderControl ExpanderHeader="Answer image">
+                    <customControls:TestElementExpanderControl.Triggers>
+                        <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                     Binding="{Binding TestAnswerImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </customControls:TestElementExpanderControl.Triggers>
+                    <Image Margin="10" Source="{Binding TestAnswerImageFilepath}" HeightRequest="350"/>
+                </customControls:TestElementExpanderControl>
+
+                <customControls:TestElementExpanderControl ExpanderHeader="Answer formula image">
+                    <customControls:TestElementExpanderControl.Triggers>
+                        <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                     Binding="{Binding TestAnswerFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                     Value="True">
+                            <Setter Property="IsVisible" Value="False"/>
+                        </DataTrigger>
+                    </customControls:TestElementExpanderControl.Triggers>
+                    <Image Margin="10" Source="{Binding TestAnswerFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                </customControls:TestElementExpanderControl>
+            </StackLayout>
+           
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="PairsQuestion" x:DataType="models:TestAnswerResponse">
+
+            <StackLayout Margin="0,0,0,20">
+
+                <Border Style="{StaticResource defaultBorder}">
+                    <VerticalStackLayout Padding="10">
+                        <Label Margin="5" VerticalTextAlignment="Center" Grid.Column="0" Grid.Row="0" Text="{Binding Answer}"/>
+                        
+                        <customControls:TestElementExpanderControl ExpanderHeader="Answer image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestAnswerImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding TestAnswerImageFilepath}" HeightRequest="350"/>
+                        </customControls:TestElementExpanderControl>
+
+                        <customControls:TestElementExpanderControl ExpanderHeader="Answer formula image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestAnswerFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding TestAnswerFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                        </customControls:TestElementExpanderControl>
+                    </VerticalStackLayout>
+                </Border>
+
+                <HorizontalStackLayout HorizontalOptions="Center" >
+                    <Image Source="pairs_arrow_up.svg"/>
+                    <Image Source="pairs_arrow_down.svg"/>
+                </HorizontalStackLayout>
+
+                <Border Style="{StaticResource defaultBorder}">
+                    <VerticalStackLayout Padding="10">
+                        <customControls:DropDownButton Margin="0,10"
+                                                       ShuffleItemSource="True"
+                                                       Placeholder="Select pair to answer"
+                                                       CurrentItem="{Binding SelectedTestAnswer}"                                                       
+                                                       PickerHeightRequest="300"                                                       
+                                                       ItemSource="{Binding TestQuestion.TestAnswers}"
+                                                       DisplayedMember="Variant">
+                            <customControls:DropDownButton.ItemTemplate>
+                                <DataTemplate x:DataType="models:TestAnswerResponse">
+                                    <StackLayout Padding="10">
+                                        <Label FontSize="Medium" Text="{Binding Variant}"/>                                        
+                                    </StackLayout>
+                                </DataTemplate>
+                            </customControls:DropDownButton.ItemTemplate>
+                        </customControls:DropDownButton>
+                        
+                        <customControls:TestElementExpanderControl ExpanderHeader="Variant image">
+                            <customControls:TestElementExpanderControl.Triggers>                                
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding SelectedTestAnswer, Converter={StaticResource IsNullConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding SelectedTestAnswer.TestVariantImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding SelectedTestAnswer.TestVariantImageFilepath}" HeightRequest="350"/>
+                        </customControls:TestElementExpanderControl>
+
+                        <customControls:TestElementExpanderControl ExpanderHeader="Variant formula image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding SelectedTestAnswer, Converter={StaticResource IsNullConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding SelectedTestAnswer.TestVariantFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding SelectedTestAnswer.TestVariantFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                        </customControls:TestElementExpanderControl>
+
+                    </VerticalStackLayout>
+                </Border>
+                
+            </StackLayout>
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="SpacesQuestion" x:DataType="models:TestAnswerResponse">
+            <customControls:DropDownButton></customControls:DropDownButton>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DefaultQuestion" x:DataType="models:TestQuestionResponse">
+            <Border Margin="10" Style="{StaticResource defaultBorder}">
+                <StackLayout>
+
+                    <StackLayout Padding="10">
+
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" FontSize="15" FontAttributes="Bold" Text="{Binding QuestionNumber, StringFormat='Question {0}'}"/>
+
+                    </StackLayout>
+
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+
+                    <StackLayout Spacing="10" Margin="20,20">
+
+                        <Label Text="{Binding Question}" Margin="5,0,0,0" FontSize="15" Grid.Column="0"/>
+                        <customControls:TestElementExpanderControl ExpanderHeader="Question image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestQuestionImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding TestQuestionImageFilepath}" Aspect="AspectFit" HeightRequest="350"/>
+                        </customControls:TestElementExpanderControl>
+
+                        <customControls:TestElementExpanderControl ExpanderHeader="Question formula image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestQuestionFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Aspect="AspectFill" Margin="10" Source="{Binding TestQuestionFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                        </customControls:TestElementExpanderControl>
+                    </StackLayout>
+                    
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+
+                    <StackLayout Spacing="10" Padding="10">                    
+
+
+                        <CollectionView ItemTemplate="{StaticResource TestAnswerTemplate}"
+                                        ItemsSource="{Binding TestAnswers}"
+                                        ItemsUpdatingScrollMode="KeepLastItemInView"/>
+
+                    </StackLayout>
+
+                </StackLayout>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="QuestionWithSpaces" x:DataType="models:TestQuestionResponse">
+            <StackLayout>
+                <WebView Source="{Binding SpacesHtmlText}"/>
+                <Label Text="{Binding SpacesHtmlText}"/>
+                <Label Text="Spaces"/>
+            </StackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="OpenEndedQuestion" x:DataType="models:TestQuestionResponse">
+            <Border Margin="10" Style="{StaticResource defaultBorder}">
+                <StackLayout>
+
+                    <StackLayout Padding="10">
+
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Grid.Column="0" FontSize="15" FontAttributes="Bold" Text="{Binding QuestionNumber, StringFormat='Question {0}'}"/>
+
+                    </StackLayout>
+
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+
+                    <StackLayout Padding="15,10,15,10">
+                        <Label Text="{Binding Question}" Margin="5,0,0,0" FontSize="15"/>
+                        <customControls:TestElementExpanderControl ExpanderHeader="Question image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestQuestionImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding TestQuestionImageFilepath}" HeightRequest="350"/>
+                        </customControls:TestElementExpanderControl>
+                        
+                        <customControls:TestElementExpanderControl ExpanderHeader="Question formula image">
+                            <customControls:TestElementExpanderControl.Triggers>
+                                <DataTrigger TargetType="customControls:TestElementExpanderControl" 
+                                             Binding="{Binding TestQuestionFormulaImageFilepath, Converter={StaticResource IsDefaultImageConverter}}"
+                                             Value="True">
+                                    <Setter Property="IsVisible" Value="False"/>
+                                </DataTrigger>
+                            </customControls:TestElementExpanderControl.Triggers>
+                            <Image Margin="10" Source="{Binding TestQuestionFormulaImageFilepath}" HeightRequest="350" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                        </customControls:TestElementExpanderControl>
+                    </StackLayout>
+
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+
+                    <StackLayout Padding="10">
+                        <Editor Placeholder="Enter your answer" Text="{Binding UserAnswer}"/>
+                    </StackLayout>
+
+                </StackLayout>
+            </Border>
+        </DataTemplate>
+
+        <selectors:TestQuestionDataTemplateSelector x:Key="TestQuestionTemplate"
+                                                    DefaultQuestion="{x:StaticResource DefaultQuestion}"
+                                                    SpacesQuestion="{x:StaticResource QuestionWithSpaces}"
+                                                    OpenEndedQuestion="{x:StaticResource OpenEndedQuestion}"/>
+
+        <selectors:TestAnswerDataTemplateSelector x:Key="TestAnswerTemplate" 
+                                                  OneAnswerQuestion="{x:StaticResource OneAnswerQuestion}"
+                                                  MultipleAnswerQuestion="{x:StaticResource MultipleAnswerQuestion}"
+                                                  PairsQuestion="{x:StaticResource PairsQuestion}"                                                  
+                                                  SpacesQuestion="{x:StaticResource SpacesQuestion}"/>
+    
+
+    </ContentPage.Resources>
+
+    <StackLayout>
+       
+        <CollectionView ItemsSource ="{Binding Test.TestQuestions}"                          
+                        VerticalOptions="FillAndExpand"                    
+                        SelectionMode="None"  
+                        ItemTemplate="{StaticResource TestQuestionTemplate}"
+                        ItemsUpdatingScrollMode="KeepLastItemInView"
+                        x:Name="TestsCollectionView">
+            
+            <CollectionView.Header>
+                <StackLayout>
+                    <Border Margin="10" Style="{StaticResource defaultBorder}">
+                        <StackLayout>
+                            <StackLayout Padding="10">
+                                <Label Text="Test" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                                <Label Text="Main information about test" HorizontalTextAlignment="Start" FontSize="Caption"/>
+                            </StackLayout>
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                            <StackLayout Padding="10">
+                                <Label Text="{Binding Test.Name, StringFormat='Title: {0}'}"/>
+                                <Label Text="{Binding Test.Description, StringFormat='Description: {0}'}"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Border>
+                    <BoxView Margin="0,5,0,0" Style="{StaticResource defaultBoxView}"/>
+                </StackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.Footer>
+                <StackLayout>
+                    <Button Margin="10,10" Text="Finish test" Command="{Binding NavigateToTestResultViewCommand}"/>                    
+                </StackLayout>
+            </CollectionView.Footer>
+            
+        </CollectionView>      
+
+    </StackLayout>
+
+</ContentPage>

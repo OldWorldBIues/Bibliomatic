@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.TextHistoryControl">    
+    <VerticalStackLayout>
+        <ScrollView Orientation="Horizontal" VerticalScrollBarVisibility="Never" HorizontalOptions="Center">
+            <HorizontalStackLayout>
+                <HorizontalStackLayout x:Name="AdditionalControlsLayout" IsVisible="False" Spacing="3">
+                    <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton x:Name="BoldButton" Style="{StaticResource ImageButtonSvg}" Clicked="BoldButton_Clicked" Source="bold.svg" WidthRequest="25" HeightRequest="40"/>
+                        <ImageButton x:Name="ItalicButton" Style="{StaticResource ImageButtonSvg}"  Clicked="ItalicButton_Clicked" Source="italic.svg" WidthRequest="25" HeightRequest="40"/>
+                        <ImageButton x:Name="UnderlineButton" Style="{StaticResource ImageButtonSvg}"  Clicked="UnderlineButton_Clicked" Source="underline.svg" WidthRequest="25" HeightRequest="40"/>
+                    </HorizontalStackLayout>
+                    <BoxView WidthRequest="2"/>
+                    <HorizontalStackLayout Spacing="3" HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton x:Name="BlockquoteButton" Style="{StaticResource ImageButtonSvg}"  Clicked="BlockquoteButton_Clicked" Source="blockquote.svg" WidthRequest="25" HeightRequest="40"/>
+                        <ImageButton x:Name="HyperlinkButton" Style="{StaticResource ImageButtonSvg}"  Clicked="HyperlinkButton_Clicked" Source="hyperlink.svg" WidthRequest="25" HeightRequest="40"/>
+                        <ImageButton x:Name="ImageButton" Style="{StaticResource ImageButtonSvg}"  Clicked="ImageButton_Clicked" Source="image.svg"  WidthRequest="25" HeightRequest="40"/>
+                        <ImageButton x:Name="FormulaButton" Style="{StaticResource ImageButtonSvg}"  Clicked="FormulaButton_Clicked" Source="formula.svg"  WidthRequest="25" HeightRequest="40"/>
+                    </HorizontalStackLayout>
+                    <BoxView WidthRequest="2"/>
+                    <HorizontalStackLayout Spacing="0" HorizontalOptions="Center" VerticalOptions="Center">
+                        <ImageButton x:Name="HorizontalRuleButton" Style="{StaticResource ImageButtonSvg}"  Clicked="HorizontalRuleButton_Clicked" Source="horizontal_rule.svg"   WidthRequest="30" HeightRequest="40"/>
+                        <ImageButton x:Name="NumericListButton" Style="{StaticResource ImageButtonSvg}"  Clicked="NumericListButton_Clicked" Source="numeric_list.svg"  WidthRequest="30" HeightRequest="40"/>
+                        <ImageButton x:Name="BulletedListButton" Style="{StaticResource ImageButtonSvg}"  Clicked="BulletedListButton_Clicked" Source="bullleted_list.svg"  WidthRequest="30" HeightRequest="40"/>
+                        <ImageButton x:Name="HeadingButton" Style="{StaticResource ImageButtonSvg}"  Clicked="HeadingButton_Clicked" Source="heading.svg"  WidthRequest="30" HeightRequest="25"/>
+                    </HorizontalStackLayout>
+                    <BoxView WidthRequest="2"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="1" HorizontalOptions="Center" VerticalOptions="Center">
+                    <ImageButton x:Name="UndoButton" Style="{StaticResource ImageButtonSvg}"  IsEnabled="False" Source="undo.svg" WidthRequest="25" HeightRequest="40" Clicked="UndoButton_Clicked"/>
+                    <ImageButton x:Name="RedoButton" Style="{StaticResource ImageButtonSvg}"  IsEnabled="False" Source="redo.svg" WidthRequest="25" HeightRequest="40" Clicked="RedoButton_Clicked"/>
+                </HorizontalStackLayout>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+            </HorizontalStackLayout>
+        </ScrollView>
+        <VerticalStackLayout>
+            <BoxView x:Name="FormattingTipsBoxView" Style="{StaticResource defaultBoxView}" IsVisible="False"/>
+            <toolkit:Expander x:Name="FormattingTipsExpander" IsVisible="False">
+                <toolkit:Expander.Header>
+                    <Border StrokeThickness="1"
+                            Padding="2"                             
+                            BackgroundColor="{AppThemeBinding Light=AliceBlue, Dark=#00d18c}">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <Label Grid.Column="0" 
+                                   VerticalTextAlignment="Center"
+                                   HorizontalTextAlignment="Center"
+                                   FontAttributes="Bold"
+                                   Text="Formatting tips" 
+                                   TextColor="#000e09"
+                                   FontSize="15"/>
+                            <Image Grid.Column="1"                                    
+                                   WidthRequest="25" 
+                                   HeightRequest="25">      
+                                <Image.Triggers>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference FormattingTipsExpander}, Path=IsExpanded}" Value="False">
+                                        <Setter Property="Source" Value="expander_arrow_right.svg"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference FormattingTipsExpander}, Path=IsExpanded}" Value="True">
+                                        <Setter Property="Source" Value="expander_arrow_down.svg"/>
+                                    </DataTrigger>
+                                </Image.Triggers>
+                            </Image>
+                        </Grid>
+                    </Border>                    
+                </toolkit:Expander.Header>
+                <syncfusion:SfTabView IndicatorBackground="{AppThemeBinding Dark={StaticResource BlackThemeButtonBackgroundColor}, Light={StaticResource Tertiary}}">
+                    <syncfusion:SfTabView.Items>
+                        <syncfusion:SfTabItem Header="Text formatting" TextColor="{AppThemeBinding Dark=White, Light=Black}" HeightRequest="300">
+                            <VerticalStackLayout>
+                                <Border Style="{StaticResource defaultBorder}" Margin="10" VerticalOptions="Start">
+                                    <ScrollView>
+                                        <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="Use this tags" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="To get this formatting" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="!Bold text!" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Bold text" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="~Italic text~" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Italic text" FontAttributes="Italic" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="_Underline text_" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Underline text" TextDecorations="Underline" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="Blockquote" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="&#10;        Blockquote&#10;" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Grid.Column="0" 
+                                                       Text="==========&#10;(Horizontal rule)" 
+                                                       HorizontalTextAlignment="Center"
+                                                       Margin="5"/> 
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <BoxView Grid.Column="2" Margin="10,0" Style="{StaticResource defaultBoxView}"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Grid.Column="0" Text="1#Heading#&#10;(Use numbers from 1 to 6 to create heading level)" 
+                                                       VerticalTextAlignment="Center" 
+                                                       HorizontalTextAlignment="Center"
+                                                       Margin="5"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Heading" FontSize="Large" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </ScrollView>
+                                </Border>
+                                <Label Margin="3" Text="* Scroll down to see all tips" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </syncfusion:SfTabItem>
+                        <syncfusion:SfTabItem Header="Lists" TextColor="{AppThemeBinding Dark=White, Light=Black}">
+                            <VerticalStackLayout>
+                                <Border Style="{StaticResource defaultBorder}" Margin="10" HeightRequest="300" VerticalOptions="Start">
+                                    <ScrollView>
+                                        <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="Numeric list" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Bulleted list" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" 
+                                                       Grid.Column="0" 
+                                                       Text="Use numbers to create numeric list&#10;&#10;1. List element&#10;2. List element&#10;3. List element"                                  
+                                                       HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" 
+                                                       Grid.Column="2" 
+                                                       Text="Use '*' to create bulleted list&#10;&#10;* List element&#10;* List element&#10;* List element"
+                                                       HorizontalTextAlignment="Center"/>
+                                            </Grid> 
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Label Text="Use '--' to create list level. Always use even number of '*' char or it will be incorrect list level" HorizontalTextAlignment="Center"/>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="10,0" 
+                                                       Grid.Column="0" 
+                                                       Text="1. First level&#10;--1. Second level&#10;----1. Third level&#10;--2. Second level&#10;2. First level" 
+                                                       HorizontalOptions="Start"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" 
+                                                       Grid.Column="2" 
+                                                       Text="* First level&#10;--* Second level&#10;----* Third level&#10;--* Second level&#10;* First level" 
+                                                       HorizontalTextAlignment="Start"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="10,0" 
+                                                       Grid.Column="0" 
+                                                       Text="1. First level&#10;  1. Second level&#10;    1. Third level&#10;  2. Second level&#10;2. First level" 
+                                                       HorizontalOptions="Start"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" 
+                                                       Grid.Column="2" 
+                                                       Text="* First level&#10;  * Second level&#10;    * Third level&#10;  * Second level&#10;* First level" 
+                                                       HorizontalTextAlignment="Start"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Label Text="Use following structure to create correct list element" HorizontalTextAlignment="Center"/>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" 
+                                                       Grid.Column="0" 
+                                                       Text="1) List level(optional)&#10;2) Number of list element&#10;3) Dot&#10;4) Space&#10;5) List element text&#10;&#10;Example: 1. List element&#10;Example: --1. List element" 
+                                                       HorizontalTextAlignment="Start"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" 
+                                                       Grid.Column="2" 
+                                                       Text="1) List level(optional)&#10;2) Char '*'&#10;3) Space&#10;4) List element text&#10;&#10;&#10;Example: * List element&#10;Example: --* List element" 
+                                                       HorizontalTextAlignment="Start"/>
+                                            </Grid>                                            
+                                        </VerticalStackLayout>
+                                    </ScrollView>
+                                </Border>
+                                <Label Margin="3" Text="* Scroll down to see all tips" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </syncfusion:SfTabItem>
+                        <syncfusion:SfTabItem Header="Attachments" TextColor="{AppThemeBinding Dark=White, Light=Black}">
+                            <VerticalStackLayout>
+                                <Border Style="{StaticResource defaultBorder}" Margin="10" HeightRequest="300" VerticalOptions="Start">
+                                    <ScrollView>
+                                        <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" Grid.Column="0" Text="Use this tags" HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="To get this formatting" HorizontalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" 
+                                                       Grid.Column="0"
+                                                       Text="Hyperlink&#10;&#10;$'hyperlink[Your link][Your link description]'/"          
+                                                       HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Label Margin="5" Grid.Column="2" Text="Your link" TextDecorations="Underline" TextColor="Blue" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" 
+                                                       Grid.Column="0" 
+                                                       Text="Image&#10;&#10;$'image[Your image filename][Your image description]'/&#10;&#10;(Your image description will be shown if the image does not load for some reason)" 
+                                                       HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Image Grid.Column="2" Source="attach_element.png" HeightRequest="150" WidthRequest="150" BackgroundColor="White"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="*, Auto, *">
+                                                <Label Margin="5" 
+                                                       Grid.Column="0" 
+                                                       Text="Formula&#10;&#10;$'formula[Your Latex formula][Your formula description]'/&#10;&#10;(Your formula description will be shown if the image does not load for some reason)" 
+                                                       HorizontalTextAlignment="Center"/>
+                                                <BoxView WidthRequest="2" Grid.Column="1"/>
+                                                <Image Grid.Column="2" Source="fractions_matrices_multilines_23_f.svg" HeightRequest="100" WidthRequest="150" BackgroundColor="White"/>
+                                            </Grid>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5" Padding="5">
+                                                <Label Grid.Column="0" Text="*"/>
+                                                <Label Grid.Column="1" Text="Remember that you can only add formulas and images using button. If you've already added a image or formula, you can enter the tag manually, even if you've already deleted the previous tag. If you delete any character in the image filename or latex formula, the image will be desplayed as not found. If you put deleted character back, everything will be displayed correctly again. Editing descriptions of links, images or formulas does not affect their display"/>
+                                            </Grid>
+                                        </VerticalStackLayout>
+                                    </ScrollView>
+                                </Border>
+                                <Label Margin="3" Text="* Scroll down to see all tips" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </syncfusion:SfTabItem>
+                    </syncfusion:SfTabView.Items>
+                </syncfusion:SfTabView>
+            </toolkit:Expander>
+        </VerticalStackLayout>        
+    </VerticalStackLayout>    
+</ContentView>

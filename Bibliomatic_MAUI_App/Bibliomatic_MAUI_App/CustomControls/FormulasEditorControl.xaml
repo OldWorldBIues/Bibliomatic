@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             xmlns:sync="clr-namespace:Syncfusion.Maui.ImageEditor;assembly=Syncfusion.Maui.ImageEditor"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.FormulasEditor">
+
+    <StackLayout Margin="10">    
+        
+        <Border Style="{StaticResource defaultBorder}">
+            <VerticalStackLayout> 
+                <VerticalStackLayout Padding="15">
+                    <Label Text="Formulas editor" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                    <Label Text="Enter latex or choose from a list of suggested formulas to create your own formula" HorizontalTextAlignment="Start" FontSize="Caption"/>
+                </VerticalStackLayout>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+                <Grid ColumnDefinitions="*, Auto" Padding="10" ColumnSpacing="10">
+                    <customControls:DropDownButton x:Name="FormulaCategoryPicker" 
+                                                   Grid.Column="0"
+                                                   Placeholder="Select formula type"
+                                                   IsDisplaySliderControls="True"                                                   
+                                                   DisplayedMember="Category"    
+                                                   PickerHeightRequest="300"                                                   
+                                                   CurrentItemChanged="FormulaCategoryPicker_CurrentItemChanged">
+                        <customControls:DropDownButton.ItemTemplate>
+                            <DataTemplate x:DataType="models:FormulaCategory">
+                                <StackLayout BackgroundColor="{AppThemeBinding Light=White, Dark=#23242a}">
+                                    <Label Margin="5,1" Text="{Binding Category}" FontSize="Medium"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </customControls:DropDownButton.ItemTemplate>
+                    </customControls:DropDownButton>
+                    <ImageButton x:Name="HideFormulasButton" Style="{StaticResource ImageButtonSvg}" Grid.Column="1" Source="hide.svg" Margin="0,0,5,0" WidthRequest="35" HeightRequest="35" Clicked="HideFormulasButton_Clicked" IsEnabled="False"/>
+                    <ImageButton x:Name="ShowFormulasButton" Style="{StaticResource ImageButtonSvg}" Grid.Column="1" Source="show.svg" Margin="0,0,5,0" WidthRequest="35" HeightRequest="35" Clicked="ShowFormulasButton_Clicked" IsVisible="False"/>
+                </Grid>                
+                <BoxView Style="{StaticResource defaultBoxView}" IsVisible="False">
+                    <BoxView.Triggers>
+                        <DataTrigger TargetType="BoxView" Binding="{Binding Source={x:Reference LatexFormulasCollectionView}, Path=IsVisible}" Value="True">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger>
+                    </BoxView.Triggers>
+                </BoxView>               
+                <StackLayout>
+                    <CollectionView x:Name="LatexFormulasCollectionView" IsVisible="False" SelectionMode="Single" SelectionChanged="LatexFormulasCollectionView_SelectionChanged" Margin="5">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="5" HorizontalItemSpacing="3" VerticalItemSpacing="3"></GridItemsLayout>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Formula">
+                                <Border Style="{StaticResource defaultBorder}" Padding="10">
+                                    <Image Aspect="AspectFit" Source="{Binding FormulaImageSource}">
+                                        <Image.Behaviors>
+                                            <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        </Image.Behaviors>
+                                    </Image>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=White, Dark={StaticResource BlackThemePage}}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=#00d18c, Light=LightBlue}" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Border>                                
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+                <BoxView Style="{StaticResource defaultBoxView}" IsVisible="False">
+                    <BoxView.Triggers>
+                        <DataTrigger TargetType="BoxView" Binding="{Binding Source={x:Reference FormulaViewGrid}, Path=IsVisible}" Value="True">
+                            <Setter Property="IsVisible" Value="True"/>
+                        </DataTrigger> 
+                    </BoxView.Triggers>
+                </BoxView>
+                <Grid x:Name="FormulaViewGrid" IsVisible="False" ColumnDefinitions="*, Auto, *" RowDefinitions="Auto, Auto, *">
+                    <VerticalStackLayout>
+                        <Label Grid.Column="0" Grid.Row="0" Text="Math view" FontSize="Header" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="10,5" Margin="0,5"/>
+                        <BoxView Grid.Row="1" Style="{StaticResource defaultBoxView}"/>                       
+                    </VerticalStackLayout>
+                    <Image x:Name="LatexFormulaImage" Scale="1" Aspect="AspectFit" Margin="5" Grid.Column="0" Grid.Row="2" HorizontalOptions="Fill" VerticalOptions="Center">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                        </Image.Behaviors>
+                    </Image>
+                    <BoxView WidthRequest="3" Grid.RowSpan="3" Grid.Column="1"/>                    
+                    <VerticalStackLayout Grid.Column="2" Grid.RowSpan="3" Grid.Row="3" Margin="5,10,10,10">
+                        <Border Style="{StaticResource defaultBorder}" VerticalOptions="Center" Margin="5">
+                            <VerticalStackLayout>
+                                <Grid ColumnDefinitions="*, Auto, Auto" >
+                                    <Label Grid.Column="0" Text="Formula" FontSize="Header" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Padding="10,5" Margin="0,5"/>
+                                    <BoxView Grid.Column="1" WidthRequest="3"/>
+                                    <ImageButton x:Name="CopyToClipboardButton" Style="{StaticResource ImageButtonSvg}" Clicked="CopyToClipboardButton_Clicked" Grid.Column="2" Source="copy_to_clipboard.svg" WidthRequest="30" HeightRequest="25" Margin="7,7,7,5"/>
+                                </Grid>
+                                <BoxView Style="{StaticResource defaultBoxView}"/>
+                                <Label x:Name="LatexFormulaLabel" Padding="5,5" Margin="3,0"/>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border x:Name="LatexDescriptionBorder" Style="{StaticResource defaultBorder}" Grid.Column="2" Margin="5">
+                            <VerticalStackLayout Margin="0,5">
+                                <Label Text="Description" FontSize="Header" FontAttributes="Bold" HorizontalTextAlignment="Center"  Padding="10,5"/>
+                                <BoxView Style="{StaticResource defaultBoxView}"/>
+                                <Label x:Name="LatexDescriptionLabel" Padding="5,5" FontSize="Small" HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+                <Grid ColumnDefinitions="*, *, Auto, Auto" ColumnSpacing="5">
+                    <Button x:Name="NewLineButton" Clicked="NewLineButton_Clicked" Grid.Column="0" Margin="15,5,0,5" Text="New line" LineBreakMode="WordWrap"/>
+                    <Button x:Name="InsertFormulaButton" IsEnabled="False" Clicked="InsertFormulaButton_Clicked" Grid.Column="1" Margin="5,5,10,5" Text="Insert formula" LineBreakMode="WordWrap"/>
+                    <BoxView WidthRequest="3" Grid.Column="2"/>
+                    <customControls:TextHistoryControl Grid.Column="3" 
+                                                       x:Name="TextHistory"
+                                                       ShowAdditionalTextControls="False"                                                      
+                                                       Margin="5,5,5,10"
+                                                       VerticalOptions="Center"
+                                                       HorizontalOptions="Center"
+                                                       ObservableText="{Binding Source={x:Reference FormulaEditor}, Path=Text}"
+                                                       CursorPosition="{Binding Source={x:Reference FormulaEditor}, Path=CursorPosition}"/>                                     
+                </Grid>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+                <StackLayout Padding="10,5">
+                    <Editor x:Name="FormulaEditor" TextChanged="FormulaEditor_TextChanged" Placeholder="Enter latex code here" AutoSize="TextChanges"/>
+                </StackLayout>
+            </VerticalStackLayout>
+        </Border>
+        
+        <Border Style="{StaticResource defaultBorder}" Margin="0,5">
+            <StackLayout>
+                <StackLayout Padding="15">
+                    <Label Text="Formula preview" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                    <Label Text="Type your formula above to see how it will look like" HorizontalTextAlignment="Start" FontSize="Caption"/>
+                </StackLayout>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+                <Image Margin="15" x:Name="FormulaImage" HeightRequest="300" Source="formula_default.png" Aspect="AspectFill" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image" Binding="{Binding Source={x:Reference FormulaImage}, Path=Source}" Value="formula_default.png">
+                            <Setter Property="BackgroundColor" Value="Transparent"/>
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+            </StackLayout>
+        </Border>
+    </StackLayout>
+</ContentView>

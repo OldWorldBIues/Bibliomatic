@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             xmlns:converters="clr-namespace:Bibliomatic_MAUI_App.Converters"
+             xmlns:viewModel="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             x:Class="Bibliomatic_MAUI_App.Views.CreatorTestInformationView"
+             Title="Test information"
+             x:Name="CreatorTestInformationPage"
+             x:DataType="viewModel:CreatorTestInformationViewModel">
+    
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshTestDataCommand}">
+        <ScrollView>
+            <VerticalStackLayout>
+                <Border Style="{StaticResource defaultBorder}" Margin="10">
+                    <StackLayout>
+                        <StackLayout Padding="10">
+                            <Label Text="Test name" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                            <Label Text="{Binding Test.Name}"/>
+                        </StackLayout>
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <StackLayout Padding="10">
+                            <Label Text="Test description" FontSize="Medium" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                            <Label Text="{Binding Test.Description}"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+                <HorizontalStackLayout HorizontalOptions="End" Margin="10,5">
+                    <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20" />
+                    <Label Text="{Binding Test.UpdatedAtFormat}" FontSize="15" Margin="5"/>
+                </HorizontalStackLayout>
+
+                <Border Style="{StaticResource defaultBorder}" Margin="10,0" Padding="5,0">
+                    <Grid ColumnDefinitions="Auto, Auto, *" HorizontalOptions="Start">
+                        <Image Grid.Column="0"  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20" Margin="0,0,5,0"/>
+                        <Label Grid.Column="1" Text="Author:" VerticalTextAlignment="Center"/>
+                        <Label Grid.Column="2" Text="{Binding Test.Author}" FontSize="15" Margin="5"/>
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*">
+                    <HorizontalStackLayout Grid.Column="0" Spacing="10" Margin="15,10">
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="{Binding Test.TestLikes.Count}" FontAttributes="Bold" FontSize="Header" VerticalTextAlignment="Center"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" 
+                             Source="{AppThemeBinding Dark=like_black_theme.svg, Light=like_light_theme.svg}"
+                             Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.ChangeLikesCommand}"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="{Binding Test.TestDislikes.Count}" VerticalTextAlignment="Center" FontAttributes="Bold" FontSize="Header"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" 
+                             Source="{AppThemeBinding Dark=dislike_black_theme.svg, Light=dislike_light_theme.svg}"
+                             Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.ChangeDislikesCommand}"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                    <Button Grid.Column="1" 
+                        HorizontalOptions="End" 
+                        Text="Add comment" 
+                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}" 
+                        BackgroundColor="Transparent"
+                        Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.StartAddingCommentCommand}"
+                        CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                </Grid>
+
+                <StackLayout x:Name="CommentStackLayout" IsVisible="False" Padding="5" Margin="5">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Border Grid.Column="0" Style="{StaticResource defaultBorder}">
+                            <Editor Text="{Binding Test.TestComment}" Placeholder="Enter comment for test"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Margin="7,0,3,0" Spacing="5">
+                            <Button Text="Add comment"
+                                Grid.Row="0"
+                                Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.AddCommentToTestCommand}"
+                                CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                            <Button Text="Cancel"
+                                Grid.Row="1"
+                                Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.CancelAddingCommentCommand}"
+                                CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </StackLayout>
+
+                <customControls:CollectionPaginationControl RecordsOnPage="{Binding RecordsOnPage}"
+                                                            TotalRecords="{Binding Test.AllTestCommentsCount}"
+                                                            CollectionHeader="{Binding Test.AllTestCommentsCount, StringFormat='Comments ({0})'}"
+                                                            AllItemsCollection="{Binding Test.AllTestComments}"
+                                                            CollectionItemSource="{Binding Test.TestComments}"
+                                                            LoadMoreCollectionData="{Binding LoadMoreTestCommentsCommand}"    
+                                                            CollectionEmptyViewText="Here is no comments currently. All test comments will be listed here"                                            
+                                                            IsRefreshingCollection="{Binding IsRefreshing}"
+                                                            Margin="10,5">
+                    <customControls:CollectionPaginationControl.CollectionItemTemplate>
+                        <DataTemplate x:DataType="models:TestComment">
+                            <Border Style="{StaticResource defaultBorder}" Margin="10,5">
+                                <VerticalStackLayout Margin="0">
+                                    <Label Margin="10,2" Text="{Binding Comment}"/>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                    <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" Margin="2">
+                                        <HorizontalStackLayout Spacing="2" Margin="1">
+                                            <Image  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="{Binding Author}" TextColor="{AppThemeBinding Light=Blue, Dark=Aqua}" FontAttributes="Bold"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="2" Margin="1">
+                                            <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="{Binding CreatedAtFormat}" TextColor="Gray" VerticalTextAlignment="Center"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="2" Margin="1" IsVisible="{Binding CanEditComment}">
+                                            <Image  Source="{AppThemeBinding Light=delete.svg, Dark=delete_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="Delete" 
+                                               VerticalTextAlignment="Center"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=Red, Dark=#f15249}">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                                      Command="{Binding Source={x:Reference CreatorTestInformationPage}, Path=BindingContext.RemoveCommentFromTestCommand}"
+                                                                      CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </FlexLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </customControls:CollectionPaginationControl.CollectionItemTemplate>
+                </customControls:CollectionPaginationControl>                
+
+                <customControls:CollectionPaginationControl RecordsOnPage="{Binding RecordsOnPage}"
+                                                            TotalRecords="{Binding Test.AllTestUserScoresCount}"
+                                                            CollectionHeader="{Binding Test.AllTestUserScoresCount, StringFormat='All users attempts ({0})'}"
+                                                            AllItemsCollection="{Binding Test.AllTestUserScores}"
+                                                            CollectionItemSource="{Binding Test.UserScores}"
+                                                            LoadMoreCollectionData="{Binding LoadMoreUserScoresCommand}"                                                                         
+                                                            CollectionEmptyViewText="There is no users that pass your test. All users previous attempts will be listed here"
+                                                            IsRefreshingCollection="{Binding IsRefreshing}"                                                            
+                                                            Margin="10">
+                    <customControls:CollectionPaginationControl.CollectionItemTemplate>
+                        <DataTemplate x:DataType="models:UserScore">
+                            <Border Style="{StaticResource defaultBorder}" Margin="10,10,10,5">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="Auto, Auto, *">
+                                        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                                            <Label Text="Score" FontSize="Subtitle" Margin="5"/>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <Label Text="{Binding PointsForTest}" Margin="5" FontSize="Subtitle" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                        </VerticalStackLayout>
+                                        <BoxView WidthRequest="2" Grid.Column="1"/>
+                                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" Spacing="5" Margin="5">
+                                            <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="2">
+                                                <Image Grid.Column="0"  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                <Label Grid.Column="1" Text="Passed by: " FontAttributes="Bold" VerticalOptions="Center"/>
+                                                <Label Grid.Column="2" Text="{Binding User}"/>
+                                            </Grid>
+                                            <HorizontalStackLayout Spacing="2">
+                                                <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                <Label Text="Test started at: " FontAttributes="Bold"/>
+                                                <Label Text="{Binding TestStartDateFormat}"/>
+                                            </HorizontalStackLayout>
+                                            <HorizontalStackLayout Spacing="2">
+                                                <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                <Label Text="Test ended at:  " FontAttributes="Bold" FontSize="Header"/>
+                                                <Label Text="{Binding TestEndDateFormat}"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </StackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </customControls:CollectionPaginationControl.CollectionItemTemplate>
+                </customControls:CollectionPaginationControl>
+
+                <BoxView Style="{StaticResource defaultBoxView}" Margin="0,10"/>
+
+                <Button Text="View test" Margin="10" Command="{Binding NavigateToTestViewCommand}"/>               
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

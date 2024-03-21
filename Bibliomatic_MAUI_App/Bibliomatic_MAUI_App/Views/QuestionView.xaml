@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:attachmentsInfo="clr-namespace:Bibliomatic_MAUI_App.Models.AttachmentInfo"
+             xmlns:viewModel="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             x:Class="Bibliomatic_MAUI_App.Views.QuestionView"
+             x:DataType="viewModel:QuestionViewModel"
+             Title="Question editor">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding ReturnBackCommand}"/>
+    </Shell.BackButtonBehavior>
+
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+    </ContentPage.Resources>
+
+
+    <ScrollView VerticalOptions="Fill" Margin="5">
+        <VerticalStackLayout>
+            <Border Style="{StaticResource defaultBorder}" Margin="0,5">
+                <customControls:TestElementExpanderControl ExpanderHeader="Question information">                    
+                    <StackLayout>
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Border Style="{StaticResource defaultBorder}" Padding="5" Margin="10,5,5,0">
+                            <Editor Text="{Binding BaseQuestion.Header}" Placeholder="Enter question header"/>
+                        </Border>
+                        <Border Style="{StaticResource defaultBorder}" Padding="5" Margin="10,5,5,10">
+                            <Editor Text="{Binding BaseQuestion.Description}" Placeholder="Enter question description"/>
+                        </Border>
+                    </StackLayout>
+                </customControls:TestElementExpanderControl>
+            </Border>
+            
+            <Border Style="{StaticResource defaultBorder}">
+                <StackLayout>
+                    <customControls:TextHistoryControl x:Name="TextHistoryControl"
+                                                       ShowAdditionalTextControls="True" 
+                                                       ShowFormattingTips="True"                                                       
+                                                       ObservableText="{Binding Source={x:Reference QuestionEditor}, Path=Text}" 
+                                                       CursorPosition="{Binding Source={x:Reference QuestionEditor}, Path=CursorPosition}"
+                                                       SelectionLength="{Binding Source={x:Reference QuestionEditor}, Path=SelectionLength}"                                                             
+                                                       HyperlinkAddingCommand="{Binding HyperlinkClickedCommand}"
+                                                       ImageAddingCommand="{Binding ImageClickedCommand}"
+                                                       FormulaAddingCommand="{Binding FormulaClickedCommand}"/>
+
+                    <StackLayout IsVisible="{Binding HyperlinkAddingLayoutVisible}">
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Label Margin="0,10" Text="Add hyperlink to text" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                        <Border Margin="5" Style="{StaticResource defaultBorder}">
+                            <Entry Text="{Binding Hyperlink}" Margin="5" Placeholder="Enter hyperlink"/>
+                        </Border>
+                        <Border Margin="5" Style="{StaticResource defaultBorder}">
+                            <Entry Text="{Binding HyperlinkDescription}" Margin="5" Placeholder="Enter hyperlink description"/>
+                        </Border>
+                        <HorizontalStackLayout Margin="0,5" HorizontalOptions="Center" Padding="5" Spacing="10">
+                            <Button Command="{Binding AddHyperlinkCommand}" CommandParameter="{Binding Source={x:Reference QuestionEditor}, Path=.}" Text="Add link" WidthRequest="100"/>
+                            <Button Command="{Binding CancelAddingHyperlinkCommand}" Text="Cancel" WidthRequest="100"/>
+                        </HorizontalStackLayout>
+                    </StackLayout>
+
+                    <StackLayout IsVisible="{Binding ImageAddingLayoutVisible}">
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Label Text="Select image from your device" Margin="5" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                        <ImageButton HeightRequest="350" Command="{Binding PickImageFromDeviceCommand}" Source="{Binding ImageSource}"/>
+                        <Border Style="{StaticResource defaultBorder}" Margin="5">
+                            <Entry Text="{Binding ImageDescription}" Margin="5" Placeholder="Enter image description"/>
+                        </Border>
+                        <HorizontalStackLayout Margin="0,5" HorizontalOptions="Center" Padding="5" Spacing="10">
+                            <Button Command="{Binding AddImageCommand}" CommandParameter="{Binding Source={x:Reference QuestionEditor}, Path=.}" Text="Add picture" WidthRequest="150"/>
+                            <Button Command="{Binding CancelAddingImageCommand}" Text="Cancel" WidthRequest="150"/>
+                        </HorizontalStackLayout>
+                    </StackLayout>
+
+                    <StackLayout IsVisible="{Binding FormulaAddingLayoutVisible}">
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <customControls:FormulasEditor Formula="{Binding LatexFormula}" IsClearFormula="{Binding IsClearFormula}"/>
+                        <Border Margin="10,5" Style="{StaticResource defaultBorder}">
+                            <Entry Text="{Binding FormulaDescription}" Margin="5" Placeholder="Enter formula description"/>
+                        </Border>
+                        <HorizontalStackLayout Margin="0,5" HorizontalOptions="Center" Padding="5" Spacing="10">
+                            <Button Command="{Binding AddFormulaCommand}" CommandParameter="{Binding Source={x:Reference QuestionEditor}, Path=.}" Text="Add formula"/>
+                            <Button Command="{Binding CancelAddingFormulaCommand}" Text="Cancel"/>
+                        </HorizontalStackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </Border>            
+            <Border Style="{StaticResource defaultBorder}" Margin="0,20">
+                <StackLayout Padding="10">
+                    <Editor x:Name="QuestionEditor" 
+                            Text="{Binding Question.QuestionBody}"
+                            Placeholder="Enter your question"                             
+                            AutoSize="TextChanges">
+                        <Editor.Behaviors>
+                            <toolkit:EventToCommandBehavior EventName="TextChanged" 
+                                                            Command="{Binding QuestionEditorTextChangedCommand}" 
+                                                            CommandParameter="{Binding Source={x:Reference QuestionEditor}, Path=.}"/>
+                        </Editor.Behaviors>
+                    </Editor>
+                </StackLayout>
+            </Border>
+
+            <customControls:TestElementExpanderControl ExpanderHeader="Attached files" Margin="1" ElementExpanded="True">
+                <StackLayout>                    
+                    <Label Text="Images :" FontSize="Header" FontAttributes="Bold" HorizontalOptions="Start" Margin="10"/>
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                    <CollectionView ItemsSource="{Binding Question.Images}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="attachmentsInfo:QuestionImageInfo">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="Auto, *" Padding="5">
+                                        <toolkit:AvatarView Grid.Column="0" FontSize="Header" Margin="10,0" BorderColor="Black" FontAttributes="Bold" TextColor="Black" BackgroundColor="{AppThemeBinding Dark=#00d18c, Light=White}" BorderWidth="3" Text="{Binding IndexOfImage}" CornerRadius="100" WidthRequest="40" HeightRequest="40"/>
+                                        <Label Grid.Column="1" Text="{Binding ShortImageFilename}" VerticalTextAlignment="Center"/>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                    <Image Source="{Binding ImageFilepath}" Margin="10" HeightRequest="350"/>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="Hyperlinks:" FontSize="Header" FontAttributes="Bold" HorizontalOptions="Start" Margin="10"/>
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                    <CollectionView ItemsSource="{Binding Question.Hyperlinks}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="attachmentsInfo:QuestionHyperlinkInfo">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="Auto, *" Padding="5">
+                                        <toolkit:AvatarView Grid.Column="0" FontSize="Header" Margin="10,0" BorderColor="Black" FontAttributes="Bold" TextColor="Black" BackgroundColor="{AppThemeBinding Dark=#00d18c, Light=White}" BorderWidth="3" Text="{Binding IndexOfHyperlink}" CornerRadius="100" WidthRequest="40" HeightRequest="40"/>
+                                        <Label Grid.Column="1" Text="{Binding Hyperlink}" VerticalTextAlignment="Center"/>                                       
+                                    </Grid>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="Formulas:" FontSize="Header" FontAttributes="Bold" HorizontalOptions="Start" Margin="10"/>
+                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                    <CollectionView ItemsSource="{Binding Question.Formulas}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="attachmentsInfo:QuestionFormulaInfo">
+                                <StackLayout>
+                                    <Grid ColumnDefinitions="Auto, *" Padding="5">
+                                        <toolkit:AvatarView Grid.Column="0" FontSize="Header" Margin="10,0" BorderColor="Black" FontAttributes="Bold" TextColor="Black" BackgroundColor="{AppThemeBinding Dark=#00d18c, Light=White}" BorderWidth="3" Text="{Binding IndexOfFormula}" CornerRadius="100" WidthRequest="40" HeightRequest="40"/>
+                                        <Label Grid.Column="1" Text="{Binding FormulaLatex}" VerticalTextAlignment="Center"/>
+                                    </Grid>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                    <Image Source="{Binding FormulaFilepath}" Margin="10" HeightRequest="350" Aspect="AspectFit" BackgroundColor="{AppThemeBinding Light=Transparent, Dark=White}"/>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </customControls:TestElementExpanderControl>            
+
+            <Label Margin="10" Text="{Binding PublishError}" IsVisible="{Binding PublishErrorVisible}" FontAttributes="Bold" TextColor="Red" HorizontalTextAlignment="Center"/>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="1,5">
+                <Button Grid.Column="0" Text="Preview" Command="{Binding NavigateToQuestionBodyViewCommand}" CommandParameter="{Binding Source={x:Reference QuestionEditor}, Path=Text}"/>
+                <Button Grid.Column="1" Text="Publish" Command="{Binding CheckForUnfilledDataCommand}"/>
+            </Grid>            
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

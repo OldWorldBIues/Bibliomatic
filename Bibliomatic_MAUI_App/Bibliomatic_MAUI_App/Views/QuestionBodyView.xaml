@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:viewModels="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             x:Class="Bibliomatic_MAUI_App.Views.QuestionBodyView"
+             x:DataType="viewModels:QuestionBodyViewModel"
+             Title="{Binding Header}">
+    
+    <StackLayout>
+        <Border Style="{StaticResource defaultBorder}" Margin="10,5">
+            <StackLayout>
+                <Grid RowDefinitions="Auto, Auto" Padding="10" ColumnSpacing="5">
+                    <Label Grid.Row="0" Text="Question: " FontAttributes="Bold" FontSize="Medium"/>
+                    <Label Grid.Row="1" Text="{Binding QuestionHeader}" FontSize="Header" Margin="3"/>
+                </Grid>
+                <BoxView Style="{StaticResource defaultBoxView}"/>
+                <Grid RowDefinitions="Auto, Auto" Padding="10" ColumnSpacing="5">
+                    <Label Grid.Row="0" Text="Description: " FontAttributes="Bold" FontSize="Medium"/>
+                    <Label Grid.Row="1" Text="{Binding QuestionDescription}" FontSize="Header" Margin="3"/>
+                </Grid>                
+            </StackLayout>
+        </Border>
+        <Border Style="{StaticResource defaultBorder}" VerticalOptions="FillAndExpand" Margin="10,5" Padding="10">
+            <WebView x:Name="ElementWebView" Source="{Binding ElementHtml}" android:WebView.EnableZoomControls="True" android:WebView.DisplayZoomControls="True" Navigating="OnNavigating"/>
+        </Border>
+    </StackLayout>
+</ContentPage>

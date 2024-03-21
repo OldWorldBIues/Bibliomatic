@@ -1,0 +1,11 @@
+<svg width="23.999999999999996" height="23.999999999999996" xmlns="http://www.w3.org/2000/svg" fill="none">
+ <g>
+  <title>Layer 1</title>
+  <g transform="rotate(90 12 12)" id="svg_4">
+   <path d="m21,12c0,4.9706 -4.0294,9 -9,9c-4.97056,0 -9,-4.0294 -9,-9c0,-4.97056 4.02944,-9 9,-9c4.9706,0 9,4.02944 9,9z" stroke="#323232" stroke-width="2" id="svg_1"/>
+   <path d="m16,12l-8,0" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="svg_2"/>
+   <path d="m13,15l2.913,-2.913l0,0c0.048,-0.048 0.048,-0.126 0,-0.174l0,0l-2.913,-2.913" stroke="#323232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="svg_3"/>
+  </g>
+ </g>
+
+</svg>

@@ -1,0 +1,2 @@
+\sqrt{5};Square root;root_157_r.svg;2.5
+\sqrt[n]{5};nth roots;root_158_r.svg;2.5

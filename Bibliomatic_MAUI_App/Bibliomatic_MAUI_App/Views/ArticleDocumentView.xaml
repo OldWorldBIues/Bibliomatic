@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Bibliomatic_MAUI_App.Views.ArticleDocumentView"
+             xmlns:viewModel="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             x:DataType="viewModel:ArticleDocumentViewModel"
+             x:Name="ArticleDocumentPage"
+             Title="Article information">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <RefreshView IsEnabled="{Binding IsNewArticle, Converter={StaticResource InvertedBoolConverter}}" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshArticleDataCommand}">
+        
+        <ScrollView>
+
+            <StackLayout>
+
+                <StackLayout Margin="10,5,10,0" Spacing="5">
+                   
+                    <Border Style="{StaticResource defaultBorder}">                       
+
+                        <StackLayout>                           
+
+                            <StackLayout  Padding="10" Spacing="3" Margin="10,0">
+                                <Label Text="Article title" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                                <Label Text="Explore the main topic of this article" HorizontalTextAlignment="Start" FontSize="13"/>                                
+                            </StackLayout>
+
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                            <Label FontSize="16" FontAttributes="Bold" Padding="10" Margin="10,0" Text="{Binding Article.Title}"/>
+                            
+                        </StackLayout>
+
+                    </Border>
+
+                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End">
+                        <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20" />
+                        <Label Text="{Binding Article.UpdatedAtFormat}" FontSize="15" Margin="5" LineBreakMode="WordWrap" MaxLines="3" HorizontalOptions="Start" />
+                    </HorizontalStackLayout>
+
+                    <Border Style="{StaticResource defaultBorder}">
+
+                        <StackLayout>
+
+                            <StackLayout Padding="10" Spacing="3" Margin="10,0">
+                                <Label Text="Article description" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                                <Label Text="Get a quick explanation of the topic being researched" HorizontalTextAlignment="Start" FontSize="13"/>
+                            </StackLayout>
+
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                            <Label Padding="10" Margin="10,0" Text="{Binding Article.Description}" FontSize="14"/>
+
+                        </StackLayout>                        
+
+                    </Border>
+
+                </StackLayout>                
+
+
+                <Border Style="{StaticResource defaultBorder}" Margin="10">
+
+                    <StackLayout>
+
+                        <StackLayout Padding="10" Spacing="3" Margin="10,0">
+                            <Label Text="Article document" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                            <Label Text="Dive into the article to get a deeper explanation of the topic and learn something new. Click the image below to open the article document" HorizontalTextAlignment="Start" FontSize="13"/>
+                        </StackLayout>
+
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <ImageButton Command="{Binding NavigateToArticleDetailsViewCommand}" Margin="10" Source="{Binding Article.ArticleImagePath}" WidthRequest="350" HeightRequest="350" />
+
+                    </StackLayout>
+
+                </Border>
+
+                <Border Style="{StaticResource defaultBorder}" Margin="10,0" Padding="5,0">
+                    <Grid ColumnDefinitions="Auto, Auto, *" HorizontalOptions="Start">
+                        <Image Grid.Column="0"  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20" Margin="0,0,5,0"/>
+                        <Label Grid.Column="1" Text="Author:" VerticalTextAlignment="Center"/>                        
+                        <Label Grid.Column="2" Text="{Binding Article.Author}" FontSize="15" Margin="5"/>
+                    </Grid>
+                </Border>
+
+
+                <Grid ColumnDefinitions="*,*" IsVisible="{Binding IsNewArticle, Converter={StaticResource InvertedBoolConverter}}">
+                    <HorizontalStackLayout Grid.Column="0" Spacing="10" Margin="15,10">
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="{Binding Article.ArticleLikes.Count}" FontAttributes="Bold" FontSize="Header" VerticalTextAlignment="Center"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" 
+                                         Source="{AppThemeBinding Dark=like_black_theme.svg, Light=like_light_theme.svg}"
+                                         Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.ChangeLikesCommand}"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="{Binding Article.ArticleDislikes.Count}" VerticalTextAlignment="Center" FontAttributes="Bold" FontSize="Header"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" 
+                                         Source="{AppThemeBinding Dark=dislike_black_theme.svg, Light=dislike_light_theme.svg}"
+                                         Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.ChangeDislikesCommand}"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                    <Button Grid.Column="1" 
+                            HorizontalOptions="End" 
+                            Text="Add comment" 
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}" 
+                            BackgroundColor="Transparent"
+                            Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.StartAddingCommentCommand}"
+                            CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                </Grid>
+               
+                <StackLayout x:Name="CommentStackLayout" IsVisible="False" Padding="5" Margin="5">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Border Grid.Column="0" Style="{StaticResource defaultBorder}">
+                            <Editor Text="{Binding Article.ArticleComment}" Placeholder="Enter comment for article"/>
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Margin="7,0,3,0" Spacing="5">
+                            <Button Text="Add comment"
+                                    Grid.Row="0"
+                                    Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.AddCommentToArticleCommand}"
+                                    CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                            <Button Text="Cancel"
+                                    Grid.Row="1"
+                                    Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.CancelAddingCommentCommand}"
+                                    CommandParameter="{Binding Source={x:Reference CommentStackLayout}, Path=.}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </StackLayout>
+
+                <customControls:CollectionPaginationControl RecordsOnPage="{Binding RecordsOnPage}"
+                                                            TotalRecords="{Binding Article.AllArticlesCommentsCount}"
+                                                            CollectionHeader="{Binding Article.AllArticlesCommentsCount, StringFormat='Comments ({0})'}"
+                                                            AllItemsCollection="{Binding Article.AllArticleComments}"
+                                                            CollectionItemSource="{Binding Article.ArticleComments}"
+                                                            LoadMoreCollectionData="{Binding LoadMoreArticleCommentsCommand}"    
+                                                            CollectionEmptyViewText="Here is no comments currently. All article comments will be listed here"
+                                                            IsVisible="{Binding IsNewArticle, Converter={StaticResource InvertedBoolConverter}}"
+                                                            IsRefreshingCollection="{Binding IsRefreshing}"
+                                                            Margin="10,5">
+                    <customControls:CollectionPaginationControl.CollectionItemTemplate>
+                        <DataTemplate x:DataType="models:ArticleComment">
+                            <Border Style="{StaticResource defaultBorder}" Margin="10,5">
+                                <VerticalStackLayout Margin="0">
+                                    <Label Margin="10,2" Text="{Binding Comment}"/>
+                                    <BoxView Style="{StaticResource defaultBoxView}"/>
+                                    <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" Margin="2">
+                                        <HorizontalStackLayout Spacing="2" Margin="1">
+                                            <Image  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="{Binding Author}" TextColor="{AppThemeBinding Light=Blue, Dark=Aqua}"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="2" Margin="1">
+                                            <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="{Binding CreatedAtFormat}" TextColor="Gray" VerticalTextAlignment="Center"/>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="2" Margin="1" IsVisible="{Binding CanEditComment}">
+                                            <Image  Source="{AppThemeBinding Light=delete.svg, Dark=delete_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                            <Label Text="Delete" 
+                                                   VerticalTextAlignment="Center"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light=Red, Dark=#f15249}">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                                          Command="{Binding Source={x:Reference ArticleDocumentPage}, Path=BindingContext.RemoveCommentFromArticleCommand}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                    </FlexLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </customControls:CollectionPaginationControl.CollectionItemTemplate>
+                </customControls:CollectionPaginationControl>                
+
+            </StackLayout>
+
+        </ScrollView>
+        
+    </RefreshView>
+    
+</ContentPage>

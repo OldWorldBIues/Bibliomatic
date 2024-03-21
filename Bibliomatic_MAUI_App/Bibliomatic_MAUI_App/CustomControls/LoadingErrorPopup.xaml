@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="Bibliomatic_MAUI_App.CustomControls.LoadingErrorPopup"
+               Color="Transparent">
+
+    <Border Stroke="#f15249" StrokeThickness="3" WidthRequest="250" HeightRequest="300" VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="{AppThemeBinding Dark={StaticResource BlackThemePage}, Light=White}">
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="10"/>
+        </Border.StrokeShape>
+
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">            
+            <Image x:Name="ErrorImage" WidthRequest="75" HeightRequest="75" Source="error.svg"/>            
+            <Label x:Name="OperationLabel"    
+                   Margin="3"
+                   VerticalOptions="Center" 
+                   Text="It was error while loading Try again or later"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"/>      
+            
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="5" VerticalOptions="End">
+                <Button x:Name="RetryButton" Text="Retry" Grid.Column="0" Clicked="RetryButton_Clicked"/>
+                <Button x:Name="ReauthorizedButton" Text="Reauthorized" Grid.Column="0" Clicked="ReauthorizedButton_Clicked" IsVisible="False"/>
+                <Button x:Name="CloseButton" Text="Close" Grid.Column="1" Clicked="CloseButton_Clicked"/>
+            </Grid>
+        </VerticalStackLayout>
+    </Border>
+    
+</toolkit:Popup>

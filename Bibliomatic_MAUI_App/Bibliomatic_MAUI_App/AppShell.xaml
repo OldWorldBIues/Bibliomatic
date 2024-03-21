@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Bibliomatic_MAUI_App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Bibliomatic_MAUI_App.Views"
+    xmlns:local="clr-namespace:Bibliomatic_MAUI_App">
+
+    <TabBar>
+
+        <Tab Title="Articles" 
+             Icon="article_tab.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:ArticleView}"/>
+        </Tab>
+
+        <Tab Title="Tests"
+             Icon="test_tab.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:TestsView}"/>
+        </Tab>
+
+        <Tab Title="Create"
+             Icon="create_tab.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:CreationView}"/>
+        </Tab>
+
+        <Tab Title="Questions"
+             Icon="question_tab.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:QuestionsView}"/>
+        </Tab>
+
+        <Tab Title="Profile"
+             Icon="profile_tab.svg" >
+            <ShellContent ContentTemplate="{DataTemplate views:ProfileView}"/>
+        </Tab>
+
+    </TabBar>
+
+</Shell>

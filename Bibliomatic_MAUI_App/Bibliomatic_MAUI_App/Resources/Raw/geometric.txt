@@ -1,0 +1,8 @@
+\Box;Box;geometric_54_g.svg;2.5
+\Diamond;Diamond;geometric_55_g.svg;2.5
+\triangle;Triangle;geometric_56_g.svg;2.5
+\angle;Angle;geometric_57_g.svg;2.5
+\perp;Perpendicularity;geometric_58_g.svg;2.5
+\mid;geometric_59_g.svg;2.5
+\nmid;geometric_60_g.svg;2.5
+\|;geometric_61_g.svg;2.5

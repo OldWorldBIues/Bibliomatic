@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+               x:Class="Bibliomatic_MAUI_App.CustomControls.FormulaEditorPopup">
+    <Grid x:Name="ContentGrid" IsVisible="False" VerticalOptions="Center" BackgroundColor="{AppThemeBinding Dark={StaticResource BlackThemePage}, Light={StaticResource White}}">
+        <ScrollView>
+            <VerticalStackLayout>
+                <ImageButton x:Name="ClosePopupButton"
+                             HorizontalOptions="End" 
+                             Margin="10,5" CornerRadius="5" 
+                             BorderWidth="3" WidthRequest="30" 
+                             HeightRequest="30" 
+                             BackgroundColor="{AppThemeBinding Dark={StaticResource BlackThemeButtonBackgroundColor}, Light={StaticResource Primary}}"                             
+                             Source="{AppThemeBinding Dark=close.svg, Light=close_light_theme.svg}"
+                             Clicked="ClosePopupButton_Clicked"/>
+                <customControls:FormulasEditor x:Name="FormulaEditor"/>
+                <Button x:Name="AddFormulaButton" Margin="10,5" Text="Add formula" FontAttributes="Bold" Clicked="AddFormulaButton_Clicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentView>

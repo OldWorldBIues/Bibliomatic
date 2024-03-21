@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bibliomatic_MAUI_App.Views.AuthenticationView"
+             xmlns:viewModels="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             Title="AuthtenticationView"               
+             NavigationPage.HasNavigationBar="False"
+             x:DataType="viewModels:AuthenticationViewModel">
+    <VerticalStackLayout VerticalOptions="Center" Margin="10,0">
+        <Border StrokeThickness="2">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="5"/>
+            </Border.StrokeShape>
+            <ScrollView Padding="15" BackgroundColor="Transparent">
+                <VerticalStackLayout>
+                    <Label HorizontalTextAlignment="Center" Text="Welcome to Bibliomatic app!" FontAttributes="Bold" FontSize="Large"/>
+                    <Image Source="auth.png" Aspect="AspectFit"/>
+                    <Label HorizontalTextAlignment="Center" Text="Click the button bellow to dive into the fascinating world of math" FontAttributes="Bold" FontSize="Medium"/>
+                    <Button Margin="0,10" Text="Explore math world" FontSize="Body" FontAttributes="Bold" Command="{Binding AuthenticateUserCommand}"/>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Border>
+    </VerticalStackLayout>    
+</ContentPage>

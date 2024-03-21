@@ -1,0 +1,9 @@
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none">
+
+ <g>
+  <title>Layer 1</title>
+  <circle id="svg_1" stroke-width="1.5" stroke="#ffffff" r="3" cy="9" cx="12" opacity="0.5"/>
+  <circle id="svg_2" stroke-width="1.5" stroke="#ffffff" r="10" cy="11.86395" cx="12"/>
+  <path stroke="#ffffff" id="svg_3" stroke-linecap="round" stroke-width="1.5" d="m17.9691,18.77551c-0.15003,-2.18338 -0.98489,-3.77551 -5.62906,-3.77551c-4.64407,0 -5.47892,1.59213 -5.62901,3.77551" opacity="0.5"/>
+ </g>
+</svg>

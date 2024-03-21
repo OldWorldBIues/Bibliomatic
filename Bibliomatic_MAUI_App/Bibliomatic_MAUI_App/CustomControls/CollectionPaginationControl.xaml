@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.CollectionPaginationControl"
+             Loaded="ContentView_Loaded">
+    <Border Style="{StaticResource defaultBorder}">
+        <StackLayout>
+            <Label x:Name="PaginationCollectionHeader" FontAttributes="Bold" Margin="5" FontSize="Body" HorizontalTextAlignment="Center"/>
+            <BoxView Style="{StaticResource defaultBoxView}"/>
+            <StackLayout x:Name="OperationFailedLayout" IsVisible="False">
+                <Image Source="operation_failed.png" HeightRequest="180"/>
+                <Label Text="Failed to load next page. Please retry or go back to previous page" FontAttributes="Italic" HorizontalTextAlignment="Center" Margin="5"/>
+                <Grid ColumnDefinitions="*,*" Margin="10,5" ColumnSpacing="10">
+                    <Button x:Name="RetryButton" Grid.Column="0" Clicked="RetryButton_Clicked" Text="Retry"/>
+                    <Button x:Name="BackToPreviousButton" Grid.Column="1" Clicked="BackToPreviousButton_Clicked" Text="Back to previous"/>
+                </Grid>
+            </StackLayout>
+            <StackLayout x:Name="EmptyViewLayout" IsVisible="False">
+                <Image Source="attachment_missing.png" HeightRequest="180"/>
+                <Label x:Name="EmptyViewLabel" FontAttributes="Italic" HorizontalTextAlignment="Center" Margin="5"/>
+            </StackLayout>
+            <CollectionView x:Name="PaginationCollectionView"/>
+            <HorizontalStackLayout x:Name="ControlsLayout" Spacing="10" Margin="0,5" HorizontalOptions="Center">
+                <ImageButton Style="{StaticResource ImageButtonSvg}" Source="spaces_arrow_left.svg" WidthRequest="40" HeightRequest="40" x:Name="MovePreviousButton" Clicked="MovePreviousButton_Clicked" IsEnabled="False"/>
+                <Label x:Name="CurrentPageLabel" FontSize="Medium" VerticalTextAlignment="Center" FontAttributes="Bold"/>
+                <ActivityIndicator x:Name="IsLoadingMoreDataIndicator" IsVisible="False"/>
+                <ImageButton Style="{StaticResource ImageButtonSvg}"  x:Name="MoveNextButton" Source="spaces_arrow_right.svg" WidthRequest="40" HeightRequest="40" Clicked="MoveNextButton_Clicked" IsEnabled="False"/>
+            </HorizontalStackLayout>
+        </StackLayout>
+    </Border>
+</ContentView>

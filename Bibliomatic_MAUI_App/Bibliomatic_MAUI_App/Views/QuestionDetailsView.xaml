@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewModel="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:behaviors="clr-namespace:Bibliomatic_MAUI_App.Behaviors"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             x:Class="Bibliomatic_MAUI_App.Views.QuestionDetailsView"
+             x:Name="QuestionDetailsPage"
+             x:DataType="viewModel:QuestionDetailsViewModel"             
+             Title="Question view">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshBaseQuestionDataCommand}">
+        <Grid>
+            <ScrollView x:Name="ContentScrollView" VerticalOptions="Fill">
+                <Border Style="{StaticResource defaultBorder}" Margin="5">
+                    <VerticalStackLayout>
+                        <Grid RowDefinitions="Auto, Auto" Padding="10" ColumnSpacing="5">
+                            <Label Grid.Row="0" Text="Question: " FontAttributes="Bold" FontSize="Medium"/>
+                            <Label Grid.Row="1" Text="{Binding BaseQuestion.Header}" FontSize="Header" Margin="3"/>
+                        </Grid>
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Grid RowDefinitions="Auto, Auto" Padding="10" ColumnSpacing="5">
+                            <Label Grid.Row="0" Text="Description: " FontAttributes="Bold" FontSize="Medium"/>
+                            <Label Grid.Row="1" Text="{Binding BaseQuestion.Description}" FontSize="Header" Margin="3"/>
+                        </Grid>
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Grid ColumnDefinitions="Auto, *" RowDefinitions="*">
+                            <StackLayout Grid.Column="0" Grid.Row="0" VerticalOptions="Center" Spacing="5" Margin="5,0,10,0">
+                                <ImageButton Source="{AppThemeBinding Dark=like_black_theme.svg, Light=like_light_theme.svg}" WidthRequest="30" HeightRequest="30" Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.ChangeQuestionLikesCommand}" CommandParameter="{Binding BaseQuestion.Question}"/>
+                                <Label Text="{Binding BaseQuestion.Question.QuestionLikes.Count}" FontAttributes="Bold" FontSize="Header" HorizontalTextAlignment="Center"/>
+                                <ImageButton Source="{AppThemeBinding Dark=dislike_black_theme.svg, Light=dislike_light_theme.svg}" WidthRequest="30" HeightRequest="30" Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.ChangeQuestionDislikesCommand}" CommandParameter="{Binding BaseQuestion.Question}"/>
+                                <Label Text="{Binding BaseQuestion.Question.QuestionDislikes.Count}" FontAttributes="Bold" FontSize="Header" HorizontalTextAlignment="Center"/>
+                            </StackLayout>
+                            <WebView Grid.Column="1" Grid.Row="0" Margin="10" Navigating="OnNavigating" Source="{Binding BaseQuestion.Question.QuestionHtmlFormat}"/>
+                        </Grid>
+
+                        <HorizontalStackLayout HorizontalOptions="End">
+                            <Button Text="Full resolution"
+                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"                            
+                                    Command="{Binding OpenQuestionHtmlInFullResolutionCommand}"
+                                    CommandParameter="{Binding BaseQuestion.Question.QuestionHtmlFormat}"                                            
+                                    BackgroundColor="Transparent"/>
+
+                            <Button Text="Add comment" 
+                                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"                                            
+                                    Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.StartAddingCommentCommand}"
+                                    CommandParameter="{Binding Source={x:Reference QuestionCommentStackLayout}, Path=.}"
+                                    BackgroundColor="Transparent"/>
+                        </HorizontalStackLayout>
+
+                        <StackLayout x:Name="QuestionCommentStackLayout" IsVisible="False" Padding="5" Margin="5">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Border Grid.Column="0" Style="{StaticResource defaultBorder}">
+                                    <Editor Text="{Binding BaseQuestion.Question.QuestionComment}" Placeholder="Enter comment for question"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Margin="7,0,3,0" Spacing="5">
+                                    <Button Text="Add comment"
+                                            Grid.Row="0"
+                                            Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.AddCommentToQuestionCommand}"
+                                            CommandParameter="{Binding Source={x:Reference QuestionCommentStackLayout}, Path=.}"/>
+                                    <Button Text="Cancel"
+                                            Grid.Row="1"
+                                            Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.CancelAddingCommentCommand}"
+                                            CommandParameter="{Binding Source={x:Reference QuestionCommentStackLayout}, Path=.}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </StackLayout>
+
+                        <customControls:CollectionPaginationControl RecordsOnPage="{Binding RecordsOnPage}"
+                                                                    TotalRecords="{Binding BaseQuestion.Question.AllQuestionCommentsCount}"
+                                                                    CollectionHeader="{Binding BaseQuestion.Question.AllQuestionCommentsCount, StringFormat='Comments ({0})'}"
+                                                                    AllItemsCollection="{Binding BaseQuestion.Question.AllQuestionComments}"
+                                                                    CollectionItemSource="{Binding BaseQuestion.Question.QuestionComments}"
+                                                                    LoadMoreCollectionData="{Binding LoadMoreQuestionCommentsCommand}"    
+                                                                    CollectionEmptyViewText="Here is no comments currently. All question comments will be listed here"                                                                
+                                                                    IsRefreshingCollection="{Binding IsRefreshing}"
+                                                                    Margin="5">
+                            <customControls:CollectionPaginationControl.CollectionItemTemplate>
+                                <DataTemplate x:DataType="models:QuestionComment">
+                                    <Border Style="{StaticResource defaultBorder}" Margin="10,5">
+                                        <VerticalStackLayout Margin="0">
+                                            <Label Margin="10,2" Text="{Binding Comment}"/>
+                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                            <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" Margin="2">
+                                                <HorizontalStackLayout Spacing="2" Margin="1">
+                                                    <Image  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Text="{Binding Author}" TextColor="{AppThemeBinding Light=Blue, Dark=Aqua}"/>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout Spacing="2" Margin="1">
+                                                    <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Text="{Binding CreatedAtFormat}" TextColor="Gray" VerticalTextAlignment="Center"/>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout Spacing="2" Margin="1" IsVisible="{Binding CanEditComment}">
+                                                    <Image  Source="{AppThemeBinding Light=delete.svg, Dark=delete_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Text="Delete" 
+                                                           VerticalTextAlignment="Center"
+                                                           FontAttributes="Bold"
+                                                           TextColor="{AppThemeBinding Light=Red, Dark=#f15249}">
+                                                        <Label.GestureRecognizers>
+                                                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                                                  Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.RemoveCommentFromQuestionCommand}"
+                                                                                  CommandParameter="{Binding .}"/>
+                                                        </Label.GestureRecognizers>
+                                                    </Label>
+                                                </HorizontalStackLayout>
+                                            </FlexLayout>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </customControls:CollectionPaginationControl.CollectionItemTemplate>
+                        </customControls:CollectionPaginationControl>
+
+                        <Border Style="{StaticResource defaultBorder}" Margin="5">
+                            <VerticalStackLayout Spacing="5" Padding="5,10">
+                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                    <Label Grid.Column="1" Text="Author: " FontAttributes="Bold" VerticalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="{Binding BaseQuestion.Question.Author}"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                    <Label Grid.Column="1" Text="Question created at: " FontAttributes="Bold"/>
+                                    <Label Grid.Column="2" Text="{Binding BaseQuestion.Question.CreatedAtFormat}"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                    <Label Grid.Column="1" Text="Question updated at: " FontAttributes="Bold"/>
+                                    <Label Grid.Column="2" Text="{Binding BaseQuestion.Question.UpdatedAtFormat}"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+
+                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                        <Label Margin="10" Text="{Binding BaseQuestion.AllAnswersCount, StringFormat='Answers ({0}):'}" FontAttributes="Bold" FontSize="Medium"/>
+                        <CollectionView x:Name="AnswersCollectionView"
+                            ItemsSource="{Binding BaseQuestion.Answers}"                                     
+                            EmptyView="Here is no answers currently. Be the first who wil help">
+                            <CollectionView.Footer>
+                                <ActivityIndicator HeightRequest="40"
+                                        WidthRequest="40"
+                                       IsRunning="{Binding IsLoading}"
+                                       IsVisible="{Binding IsLoading}"/>
+                            </CollectionView.Footer>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:AnswerResponce">
+                                    <StackLayout>
+                                        <BoxView Style="{StaticResource defaultBoxView}"/>
+                                        <Grid ColumnDefinitions="Auto, *" RowDefinitions="*">
+                                            <StackLayout Grid.Column="0" Grid.Row="0" VerticalOptions="Center" Spacing="5" Margin="5,0,10,0">
+                                                <ImageButton IsEnabled="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.BaseQuestion.Question.CanEditQuestion}"  
+                                                             Margin="0,10" 
+                                                             WidthRequest="35" 
+                                                             HeightRequest="35" 
+                                                             Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.MarkAsAnswerCommand}" 
+                                                             CommandParameter="{Binding .}">
+                                                    <ImageButton.Triggers>
+                                                        <DataTrigger TargetType="ImageButton" Binding="{Binding MarkedAsAnswer}" Value="True">
+                                                            <Setter Property="Source" Value="{AppThemeBinding Dark=is_answer_black_theme.svg, Light=is_answer_light_theme.svg}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="ImageButton" Binding="{Binding MarkedAsAnswer}" Value="False">
+                                                            <Setter Property="Source" Value="{AppThemeBinding Dark=is_not_answer_black_theme.svg, Light=is_not_answer_light_theme.svg}"/>
+                                                        </DataTrigger>
+                                                    </ImageButton.Triggers>
+                                                </ImageButton>
+                                                <ImageButton Source="{AppThemeBinding Dark=like_black_theme.svg, Light=like_light_theme.svg}" WidthRequest="30" HeightRequest="30" Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.ChangeAnswerLikesCommand}" CommandParameter="{Binding .}"/>
+                                                <Label Text="{Binding AnswerLikes.Count}" FontAttributes="Bold" FontSize="Header" HorizontalTextAlignment="Center"/>
+                                                <ImageButton Source="{AppThemeBinding Dark=dislike_black_theme.svg, Light=dislike_light_theme.svg}" WidthRequest="30" HeightRequest="30" Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.ChangeAnswerDislikesCommand}" CommandParameter="{Binding .}"/>
+                                                <Label Text="{Binding AnswerDislikes.Count}" FontAttributes="Bold" FontSize="Header" HorizontalTextAlignment="Center"/>
+                                            </StackLayout>
+                                            <WebView Grid.Column="1" Grid.Row="0" Margin="10" Navigating="OnNavigating" Source="{Binding AnswerHtmlFormat}"/>
+                                        </Grid>
+
+                                        <ScrollView Orientation="Horizontal" VerticalScrollBarVisibility="Never" HorizontalOptions="EndAndExpand">
+                                            <HorizontalStackLayout HorizontalOptions="End">
+                                                <Button Text="Full resolution"
+                                                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"                                            
+                                                        Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.OpenAnswerHtmlInFullResolutionCommand}"
+                                                        CommandParameter="{Binding AnswerHtmlFormat}"                                            
+                                                        BackgroundColor="Transparent"/>
+
+                                                <Button Text="Edit"  
+                                                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"
+                                                        IsVisible="{Binding CanEditAnswer}"
+                                                        Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.NavigateToAnswerEditorCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        BackgroundColor="Transparent"/>
+
+                                                <Button Text="Delete"       
+                                                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"
+                                                        IsVisible="{Binding CanEditAnswer}"
+                                                        Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.RemoveAnswerCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        BackgroundColor="Transparent"/>
+
+                                                <Button Text="Add comment" 
+                                                        TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"                                            
+                                                        Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.StartAddingCommentCommand}"
+                                                        CommandParameter="{Binding Source={x:Reference AnswerCommentStackLayout}, Path=.}"
+                                                        BackgroundColor="Transparent"/>
+                                            </HorizontalStackLayout>
+                                        </ScrollView>
+
+                                        <StackLayout x:Name="AnswerCommentStackLayout" IsVisible="False" Padding="5" Margin="5">
+                                            <Grid ColumnDefinitions="*, Auto">
+                                                <Border Grid.Column="0" Style="{StaticResource defaultBorder}">
+                                                    <Editor Text="{Binding AnswerComment}" Placeholder="Enter comment for answer"/>
+                                                </Border>
+                                                <VerticalStackLayout Grid.Column="1" Margin="7,0,3,0" Spacing="5">
+                                                    <Button Text="Add comment"
+                                                            Grid.Row="0"
+                                                            Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.AddCommentToAnswerCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference AnswerCommentStackLayout}, Path=.}"/>
+                                                    <Button Text="Cancel"
+                                                            Grid.Row="1"
+                                                            Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.CancelAddingCommentCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference AnswerCommentStackLayout}, Path=.}"/>
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </StackLayout>
+
+                                        <customControls:CollectionPaginationControl RecordsOnPage="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.RecordsOnPage}"
+                                                                                    TotalRecords="{Binding AllAnswerCommentsCount}"
+                                                                                    CollectionHeader="{Binding AllAnswerCommentsCount, StringFormat='Comments ({0})'}"
+                                                                                    AllItemsCollection="{Binding AllAnswerComments}"
+                                                                                    CollectionItemSource="{Binding AnswerComments}"
+                                                                                    LoadMoreCollectionData="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.LoadMoreAnswerCommentsCommand}"    
+                                                                                    LoadMoreCollectionDataParameter="{Binding .}"
+                                                                                    CollectionEmptyViewText="Here is no comments currently. All answer comments will be listed here"                                                                                
+                                                                                    IsRefreshingCollection="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.IsRefreshing}"
+                                                                                    Margin="5">
+                                            <customControls:CollectionPaginationControl.CollectionItemTemplate>
+                                                <DataTemplate x:DataType="models:AnswerComment">
+                                                    <Border Style="{StaticResource defaultBorder}" Margin="10,5">
+                                                        <VerticalStackLayout Margin="0">
+                                                            <Label Margin="10,2" Text="{Binding Comment}"/>
+                                                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                                                            <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" Margin="2">
+                                                                <HorizontalStackLayout Spacing="2" Margin="1">
+                                                                    <Image  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                                    <Label Text="{Binding Author}" TextColor="{AppThemeBinding Light=Blue, Dark=Aqua}"/>
+                                                                </HorizontalStackLayout>
+                                                                <HorizontalStackLayout Spacing="2" Margin="1">
+                                                                    <Image  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                                    <Label Text="{Binding CreatedAtFormat}" TextColor="Gray" VerticalTextAlignment="Center"/>
+                                                                </HorizontalStackLayout>
+                                                                <HorizontalStackLayout Spacing="2" Margin="1" IsVisible="{Binding CanEditComment}">
+                                                                    <Image Source="{AppThemeBinding Light=delete.svg, Dark=delete_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                                    <Label Text="Delete" 
+                                                                           VerticalTextAlignment="Center"
+                                                                           FontAttributes="Bold"
+                                                                           TextColor="{AppThemeBinding Light=Red, Dark=#f15249}">
+                                                                        <Label.GestureRecognizers>
+                                                                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                                                                  Command="{Binding Source={x:Reference QuestionDetailsPage}, Path=BindingContext.RemoveCommentFromAnswerCommand}"
+                                                                                                  CommandParameter="{Binding .}"/>
+                                                                        </Label.GestureRecognizers>
+                                                                    </Label>
+                                                                </HorizontalStackLayout>
+                                                            </FlexLayout>
+                                                        </VerticalStackLayout>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </customControls:CollectionPaginationControl.CollectionItemTemplate>
+                                        </customControls:CollectionPaginationControl>
+
+                                        <Border Style="{StaticResource defaultBorder}" Margin="5">
+                                            <VerticalStackLayout Spacing="5" Padding="5,10">
+                                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Grid.Column="1" Text="Author: " FontAttributes="Bold" VerticalOptions="Center"/>
+                                                    <Label Grid.Column="2" Text="{Binding Author}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Grid.Column="1" Text="Answer created at: " FontAttributes="Bold"/>
+                                                    <Label Grid.Column="2" Text="{Binding CreatedAtFormat}"/>
+                                                </Grid>
+                                                <Grid ColumnDefinitions="Auto, Auto, *" ColumnSpacing="5">
+                                                    <Image Grid.Column="0"  Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                                                    <Label Grid.Column="1" Text="Answer updated at: " FontAttributes="Bold"/>
+                                                    <Label Grid.Column="2" Text="{Binding UpdatedAtFormat}"/>
+                                                </Grid>
+                                            </VerticalStackLayout>
+                                        </Border>
+
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <Button Text="Load more answers"
+                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}"
+                                BackgroundColor="Transparent"
+                                IsVisible="{Binding LoadMoreAnswersVisible}"
+                                Command="{Binding LoadMoreAnswersCommand}"/>                        
+                    </VerticalStackLayout>
+                </Border>
+            </ScrollView>
+            <Grid VerticalOptions="End" HorizontalOptions="Start" Margin="10,5">
+                <toolkit:AvatarView Text="+" 
+                                    HeightRequest="50"
+                                    WidthRequest="50"
+                                    FontSize="25" 
+                                    FontAttributes="Bold" 
+                                    TextColor="{AppThemeBinding Dark=Black, Light=White}" 
+                                    BackgroundColor="{AppThemeBinding Dark={StaticResource BlackThemeButtonBackgroundColor}, Light={StaticResource Primary}}" 
+                                    BorderWidth="2" 
+                                    BorderColor="{AppThemeBinding Dark=Black, Light=White}">
+                    <toolkit:AvatarView.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding NavigateToAnswerEditorCommand}"/>
+                    </toolkit:AvatarView.GestureRecognizers>
+                </toolkit:AvatarView>
+            </Grid>
+            <Grid ColumnDefinitions="Auto, Auto, Auto" ColumnSpacing="2" VerticalOptions="End" HorizontalOptions="End" Margin="10,5" IsVisible="{Binding ScrollToAnswer}">
+                <Border BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource BlackThemeButtonBackgroundColor}}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10"/>
+                    </Border.StrokeShape>                    
+                    <HorizontalStackLayout>
+                        <Button x:Name="ScrollToNewAnswerButton" BorderWidth="1" Grid.Column="0" Text="To created answer" Clicked="ScrollToNewAnswerButton_Clicked"/>
+                        <BoxView Grid.Column="1" WidthRequest="1"/>
+                        <ImageButton x:Name="HideScrollButton" BorderWidth="1" Grid.Column="2" Source="{AppThemeBinding Dark=close.svg, Light=close_light_theme.svg}" WidthRequest="35" HeightRequest="35" Clicked="HideScrollButton_Clicked"/>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </RefreshView>
+</ContentPage>

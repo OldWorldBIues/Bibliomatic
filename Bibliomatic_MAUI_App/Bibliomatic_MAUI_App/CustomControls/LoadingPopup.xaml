@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="Bibliomatic_MAUI_App.CustomControls.LoadingPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Color="Transparent">
+
+    <Border Stroke="{AppThemeBinding Dark={StaticResource BlackThemeButtonBackgroundColor}, Light={StaticResource Primary}}" StrokeThickness="3" WidthRequest="250" HeightRequest="250" VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="{AppThemeBinding Dark={StaticResource BlackThemePage}, Light=White}">
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="10"/>
+        </Border.StrokeShape>
+        
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+            <Image x:Name="CompletedImage" IsVisible="False" WidthRequest="75" HeightRequest="75" Source="{AppThemeBinding Dark=completed_black_theme.svg, Light=completed_light_theme.svg}"/>            
+            <ActivityIndicator x:Name="ProcessIndicator" IsRunning="True" WidthRequest="75" HeightRequest="75"/>
+            <Label x:Name="OperationLabel"                   
+                   VerticalOptions="Center" 
+                   HorizontalOptions="Center"
+                   FontSize="Medium"/>
+            <Button x:Name="CompletedButton" IsVisible="False" Clicked="CompletedButton_Clicked"/>           
+        </VerticalStackLayout>
+    </Border>
+    
+</toolkit:Popup>

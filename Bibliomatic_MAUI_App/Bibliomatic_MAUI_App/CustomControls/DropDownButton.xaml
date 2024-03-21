@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<StackLayout xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="Bibliomatic_MAUI_App.CustomControls.DropDownButton"
+             x:Name="dropDownButton"       
+             VerticalOptions="Center">
+    
+    <Grid ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5">
+
+        <ImageButton x:Name="leftSliderButton"
+                     Style="{StaticResource ImageButtonSvg}"
+                     Source="spaces_arrow_left.svg"
+                     IsVisible="False"
+                     IsEnabled="False"
+                     Grid.Column="0"
+                     WidthRequest="40"
+                     HeightRequest="40"
+                     Clicked="LeftSliderButton_Clicked"/>
+
+
+        <Frame Grid.Column="1" Padding="12" BackgroundColor="{AppThemeBinding Light=White, Dark=#23242a}">
+            <Grid RowDefinitions="Auto" ColumnDefinitions="*,25" >
+
+                <Label Text="Select item"
+                       x:Name="lblDropDown"
+                       Grid.Row="0"                        
+                       FontAttributes="Bold"
+                       LineBreakMode="TailTruncation"
+                       HorizontalTextAlignment="Center"  
+                       HorizontalOptions="Center"
+                       VerticalTextAlignment="Center"
+                       VerticalOptions="Center"
+                       Grid.Column="0"/>                
+                
+                <Image Source="{AppThemeBinding  Light=dropdownbutton.svg, Dark=dropdownbutton_dark_theme.svg}" 
+                       Grid.Row="0"                       
+                       Grid.Column="1"       
+                       VerticalOptions="Center"
+                       Margin="10,0"
+                       HeightRequest="25" 
+                       Aspect="AspectFill"
+                       WidthRequest="25"/>               
+
+            </Grid>
+
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Tapped="DropDownButtonTapGestureRecognizer_Tapped"/>
+            </Frame.GestureRecognizers>
+        </Frame>
+
+        <ImageButton x:Name="rightSliderButton"
+                     Style="{StaticResource ImageButtonSvg}"
+                     Source="spaces_arrow_right.svg"
+                     Grid.Column="3"
+                     IsVisible="False"
+                     IsEnabled="False"
+                     WidthRequest="40"
+                     HeightRequest="40"
+                     Clicked="RightSliderButton_Clicked"/>
+
+    </Grid>
+
+</StackLayout>

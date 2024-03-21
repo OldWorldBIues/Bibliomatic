@@ -1,0 +1,13 @@
+\frac{1}{10}=0.1;Fractions;fractions_matrices_multilines_7_f.svg;2
+\binom{n}{k};Binomial coefficients;fractions_matrices_multilines_12_f.svg;2
+\begin{matrix} x & y \\ z & v \end{matrix};Matrices;fractions_matrices_multilines_15_f.svg;2
+\begin{vmatrix} x & y \\ z & v \end{vmatrix};fractions_matrices_multilines_16_f.svg;2
+\begin{Vmatrix} x & y \\ z & v \end{Vmatrix};fractions_matrices_multilines_17_f.svg;2
+\begin{bmatrix} 0 & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & 0 \end{bmatrix};fractions_matrices_multilines_18_f.svg;1.5
+\begin{Bmatrix} x & y \\ z & v \end{Bmatrix};fractions_matrices_multilines_19_f.svg;2
+\binom{n}{k};fractions_matrices_multilines_20_f.svg;1.5
+\begin{pmatrix} x & y \\ z & v \end{pmatrix};fractions_matrices_multilines_21_f.svg;2
+\begin{array}{ccc} a & b & S \\ 0&0&1\\ 0&1&1\\ 1&0&1\\ 1&1&0 \end{array};Arrays;fractions_matrices_multilines_22_f.svg;2
+\begin{cases} 3x + 5y + z &= 1 \\ 7x - 2y + 4z &= 2 \\ -6x + 3y + 2z &= 3 \end{cases};Simultaneous equations;fractions_matrices_multilines_23_f.svg;1
+\begin{array}{lcl} z & = & a \\ f(x,y,z) & = & x + y + z \end{array};Multiline equations(left alignment);fractions_matrices_multilines_24_f.svg;1
+\begin{array}{lcr} z & = & a \\ f(x,y,z) & = & x + y + z \end{array};Multiline equations(right alignment);fractions_matrices_multilines_25_f.svg;1

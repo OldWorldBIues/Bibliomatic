@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"                   
+             xmlns:selectors="clr-namespace:Bibliomatic_MAUI_App.Selectors"             
+             xmlns:viewModels="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             x:Class="Bibliomatic_MAUI_App.Views.ProfileView"
+             Title="ProfileView"
+             x:Name="ProfileViewPage"
+             x:DataType="viewModels:ProfileViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+            <toolkit:IsStringNullOrEmptyConverter x:Key="IsStringNullOrEmptyConverter"/>
+        </ResourceDictionary>
+        
+        <DataTemplate x:Key="ArticlesTemplate" x:DataType="models:ArticleResponce">
+            <VerticalStackLayout>
+                <Border Style="{StaticResource defaultBorder}" Margin="10">
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="2"
+                                              Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToArticlePreviewCommand}"
+                                              CommandParameter="{Binding .}"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid InputTransparent="True" ColumnDefinitions="Auto, 30, *" RowDefinitions="Auto, Auto, Auto" ColumnSpacing="5" Padding="10">
+
+                        <Image Source="{AppThemeBinding Light=article.svg, Dark=article_dark_theme.svg}" Aspect="AspectFill" HeightRequest="100" Grid.RowSpan="3" Grid.Column="0" Margin="10"/>
+
+                        <Image Grid.Column="1" Grid.Row="0" Source="{AppThemeBinding Light=article_tab.svg, Dark=article_tab_dark_theme.svg}" WidthRequest="20" HeightRequest="20" />
+                        <Label Grid.Column="2" Grid.Row="0" Text="{Binding Title}" FontSize="15" Margin="10"/>
+
+                        <Image Grid.Column="1" Grid.Row="1" Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" WidthRequest="20" HeightRequest="20"/>
+                        <Label Grid.Column="2" Grid.Row="1" Text="{Binding ShortAuthorName}" FontSize="15" Margin="5"/>
+
+                        <Image Grid.Column="1" Grid.Row="2" Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" WidthRequest="20" HeightRequest="20" />
+                        <Label Grid.Column="2" Grid.Row="2" Text="{Binding UpdatedAtFormat}" FontSize="15" Margin="5"/>
+
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" Margin="10,0,10,5" ColumnSpacing="5" IsVisible="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.CanEditProfile}">
+                    <Border Grid.Column="0" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="Aquamarine">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToArticleEditorCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Edit" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <Image WidthRequest="30" HeightRequest="30" Source="edit.svg"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                    
+                    <Border Grid.Column="1" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="#ff7f7f">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.DeleteArticleCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Delete" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <Image WidthRequest="30" HeightRequest="30" Source="delete.svg"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TestsTemplate" x:DataType="models:TestResponse">
+            <VerticalStackLayout>
+                <Border Style="{StaticResource defaultBorder}" Padding="13" Margin="5,10,5,5">
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="2"
+                                              Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToTestInformationViewCommand}"
+                                              CommandParameter="{Binding .}"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto" ColumnSpacing="5" RowSpacing="10" InputTransparent="True">
+
+                        <Image Grid.Row="0" Grid.ColumnSpan="2" Source="{AppThemeBinding Light=test.svg, Dark=test_dark_theme.svg}" HeightRequest="100" Margin="5"/>
+
+                        <Image Grid.Column="0" Grid.Row="1" Source="{AppThemeBinding Light=article_tab.svg, Dark=article_tab_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Grid.Column="1" Grid.Row="1" FontSize="14" Text="{Binding Name}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+
+                        <Image Grid.Column="0" Grid.Row="2" Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Grid.Column="1" Grid.Row="2" FontSize="14" Text="{Binding ShortAuthorName}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+
+                        <Image Grid.Column="0" Grid.Row="3" Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                        <Label Grid.Column="1" Grid.Row="3" FontSize="14" Text="{Binding UpdatedAtFormat}" VerticalTextAlignment="Center" />
+
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" Margin="5,0,5,10" ColumnSpacing="5" IsVisible="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.CanEditProfile}">
+                    <Border Grid.Column="0" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="Aquamarine">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToTestEditorCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Edit" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <Image WidthRequest="30" HeightRequest="30" Source="edit.svg"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                    
+                    <Border Grid.Column="1" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="#ff7f7f">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.DeleteTestCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Delete" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <Image WidthRequest="30" HeightRequest="30" Source="delete.svg"/>                            
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </VerticalStackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="QuestionsTemplate" x:DataType="models:BaseQuestionResponce">
+            <StackLayout>
+                <Border Style="{StaticResource defaultBorder}" Margin="10,15,10,5">
+
+                    <Border.Triggers>
+                        <DataTrigger TargetType="Border" Binding="{Binding IsSolved}" Value="True">
+                            <Setter Property="Stroke" Value="{AppThemeBinding Light=Green, Dark={StaticResource BlackThemeButtonBackgroundColor}}"/>
+                        </DataTrigger>
+                    </Border.Triggers>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="2"
+                                              Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToQuestionDetailsViewCommand}"
+                                              CommandParameter="{Binding .}"/>
+                    </Border.GestureRecognizers>
+
+                    <Grid ColumnDefinitions="Auto, Auto, *" RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+                        <Image Grid.Column="0" Grid.RowSpan="3" Margin="5" Source="{AppThemeBinding Light=question_tab.svg, Dark=question_tab_dark_theme.svg}" WidthRequest="50" HeightRequest="50"/>
+                        <BoxView Grid.Column="1" Grid.RowSpan="3" WidthRequest="2">
+                            <BoxView.Triggers>
+                                <DataTrigger TargetType="BoxView" Binding="{Binding IsSolved}" Value="True">
+                                    <Setter Property="Color" Value="{AppThemeBinding Light=Green, Dark={StaticResource BlackThemeButtonBackgroundColor}}"/>
+                                </DataTrigger>
+                            </BoxView.Triggers>
+                        </BoxView>
+                        <StackLayout Grid.Column="2" Grid.Row="0" Margin="5">
+                            <Label Text="Question: " FontSize="Header" FontAttributes="Bold"/>
+                            <Label Margin="0,3" Text="{Binding Header}"/>
+                        </StackLayout>
+                        <BoxView Grid.Column="2" Grid.Row="1" Style="{StaticResource defaultBoxView}">
+                            <BoxView.Triggers>
+                                <DataTrigger TargetType="BoxView" Binding="{Binding IsSolved}" Value="True">
+                                    <Setter Property="Color" Value="{AppThemeBinding Light=Green, Dark={StaticResource BlackThemeButtonBackgroundColor}}"/>
+                                </DataTrigger>
+                            </BoxView.Triggers>
+                        </BoxView>
+                        <StackLayout Grid.Column="2" Grid.Row="2" Margin="5">
+                            <Label Text="Description: " FontSize="Header" FontAttributes="Bold"/>
+                            <Label Margin="0,3" Text="{Binding Description}"/>
+                        </StackLayout>
+                        <BoxView Grid.ColumnSpan="3" Grid.Row="3" Style="{StaticResource defaultBoxView}">
+                            <BoxView.Triggers>
+                                <DataTrigger TargetType="BoxView" Binding="{Binding IsSolved}" Value="True">
+                                    <Setter Property="Color" Value="{AppThemeBinding Light=Green, Dark={StaticResource BlackThemeButtonBackgroundColor}}"/>
+                                </DataTrigger>
+                            </BoxView.Triggers>
+                        </BoxView>
+                        <Grid Grid.ColumnSpan="3" Grid.Row="4" ColumnDefinitions="*, Auto, Auto">
+                            <HorizontalStackLayout Grid.Column="0" Padding="5" HorizontalOptions="Start" VerticalOptions="Center" Spacing="5">
+                                <Image  WidthRequest="25" HeightRequest="25" Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}"/>
+                                <Label Text="{Binding ShortAuthorName}" VerticalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
+                            <BoxView Grid.Column="1" WidthRequest="2">
+                                <BoxView.Triggers>
+                                    <DataTrigger TargetType="BoxView" Binding="{Binding IsSolved}" Value="True">
+                                        <Setter Property="Color" Value="{AppThemeBinding Light=Green, Dark={StaticResource BlackThemeButtonBackgroundColor}}"/>
+                                    </DataTrigger>
+                                </BoxView.Triggers>
+                            </BoxView>
+                            <HorizontalStackLayout Grid.Column="2" Padding="5" HorizontalOptions="Center" VerticalOptions="Center" Spacing="5">
+                                <Image  WidthRequest="25" HeightRequest="25" Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}"/>
+                                <Label Text="{Binding UpdatedAtFormat}" VerticalTextAlignment="Center"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Grid ColumnDefinitions="*,*" Margin="10,0,10,5" ColumnSpacing="5" IsVisible="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.CanEditProfile}">
+                    <Border Grid.Column="0" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="Aquamarine">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.NavigateToQuestionEditorCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Edit" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" Source="edit.svg"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                    
+                    <Border Grid.Column="1" Style="{StaticResource defaultBorder}" Padding="3" BackgroundColor="#ff7f7f">
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                  Command="{Binding Source={x:Reference ProfileViewPage}, Path=BindingContext.DeleteBaseQuestionCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5" HorizontalOptions="Center" InputTransparent="True">
+                            <Label Text="Delete" VerticalTextAlignment="Center" TextColor="Black" FontAttributes="Bold"/>
+                            <ImageButton WidthRequest="30" HeightRequest="30" Source="delete.svg"/>
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+            </StackLayout>
+        </DataTemplate>
+
+        <selectors:UserDataDataTemplateSelector x:Key="UserDataDataTemplateSelector"
+                                                Articles="{x:StaticResource ArticlesTemplate}"
+                                                Tests="{x:StaticResource TestsTemplate}"
+                                                Questions="{x:StaticResource QuestionsTemplate}"/>
+    </ContentPage.Resources>
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshUserDataCommand}">
+        <Grid>
+            <ScrollView x:Name="ContentScrollView" VerticalOptions="Fill">
+                <VerticalStackLayout Margin="3">
+                    <HorizontalStackLayout HorizontalOptions="End">
+                        <ImageButton x:Name="EditProfileImageButton" Margin="5" WidthRequest="30" HeightRequest="30" Source="{AppThemeBinding Light=edit.svg, Dark=edit_dark_theme.svg}" Clicked="EditProfileImageButton_Clicked"/>
+                        <ImageButton Margin="5" WidthRequest="30" HeightRequest="30" Source="{AppThemeBinding Light=logout.svg, Dark=logout_dark_theme.svg}" Command="{Binding LogoutCommand}"/>
+                    </HorizontalStackLayout>
+                    <toolkit:AvatarView Margin="5" BackgroundColor="{AppThemeBinding Dark=#00d18c, Light={StaticResource Primary}}" Text="{Binding AvatarText}" TextColor="White" FontSize="Medium"/>
+                    <Label Text="{Binding UserName}" Margin="0,5,0,0" HorizontalTextAlignment="Center"/>
+                    <Label Text="{Binding UserEmail}" Margin="0,5,0,5" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    <Border Style="{StaticResource defaultBorder}" Margin="3">
+                        <StackLayout>
+                            <Grid ColumnDefinitions="*, Auto, *, Auto, *, Auto" ColumnSpacing="5">
+                                <Button IsEnabled="{Binding ArticlesButtonEnabled}" 
+                                        Margin="5" 
+                                        FontAttributes="Bold"
+                                        Grid.Column="0" 
+                                        CornerRadius="20" 
+                                        Text="Articles"
+                                        Command="{Binding SetArticlesCollectionAsItemSourceCommand}"/>
+                                <BoxView WidthRequest="2" Grid.RowSpan="3" Grid.Column="1"/>
+                                <Button IsEnabled="{Binding TestsButtonEnabled}" 
+                                        Margin="5" 
+                                        FontAttributes="Bold"
+                                        Grid.Column="2" 
+                                        CornerRadius="20" 
+                                        Text="Tests"
+                                        Command="{Binding SetTestsCollectionAsItemSourceCommand}"/>
+                                <BoxView WidthRequest="2" Grid.RowSpan="3" Grid.Column="3"/>
+                                <Button IsEnabled="{Binding QuestionsButtonEnabled}" 
+                                        Margin="5"
+                                        FontAttributes="Bold"
+                                        Grid.Column="4" 
+                                        CornerRadius="20" 
+                                        Text="Questions"
+                                        Command="{Binding SetQuestionsCollectionAsItemSourceCommand}"/>
+                            </Grid>
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                            <Label Text="*Double tap to open content" HorizontalTextAlignment="Center"/>
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+
+                            <VerticalStackLayout VerticalOptions="Center" Margin="0,25" IsVisible="{Binding FailedLayoutVisible}">
+                                <Image Source="operation_failed.png"/>
+                                <Label Margin="5" Text="Failed to load user data. Please refresh page to try again or later" FontSize="Medium" HorizontalTextAlignment="Center" FontAttributes="Italic"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout VerticalOptions="Center" Margin="0,25" IsVisible="{Binding NoContentLayoutVisible}">
+                                <Image Source="attachment_missing.png" HeightRequest="300"/>
+                                <Label Margin="5" Text="There is no content here yet. Create something and it will be listed here" FontSize="Medium" HorizontalTextAlignment="Center" FontAttributes="Italic"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout>
+                                <ActivityIndicator HeightRequest="40"
+                                                   WidthRequest="40"                                       
+                                                   IsRunning="{Binding IsBusy}"
+                                                   IsVisible="{Binding IsBusy}"/>
+
+                                <CollectionView ItemsSource="{Binding UserData.Articles}" 
+                                                ItemTemplate="{StaticResource UserDataDataTemplateSelector}"
+                                                IsVisible="{Binding ArticlesButtonEnabled, Converter={StaticResource InvertedBoolConverter}}"/>
+
+                                <CollectionView ItemsSource="{Binding UserData.Tests}" 
+                                                ItemTemplate="{StaticResource UserDataDataTemplateSelector}"
+                                                IsVisible="{Binding TestsButtonEnabled, Converter={StaticResource InvertedBoolConverter}}">
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5"/>
+                                    </CollectionView.ItemsLayout>
+                                </CollectionView>
+
+                                <CollectionView ItemsSource="{Binding UserData.Questions}" 
+                                                ItemTemplate="{StaticResource UserDataDataTemplateSelector}"
+                                                IsVisible="{Binding QuestionsButtonEnabled, Converter={StaticResource InvertedBoolConverter}}"/>
+                            </VerticalStackLayout>
+                        </StackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </ScrollView>
+            <Border x:Name="EditProfileBorder" Style="{StaticResource defaultBorder}" VerticalOptions="Center" Margin="10" IsVisible="False">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
+
+                    <ImageButton x:Name="CloseEditImageButton" Clicked="CloseEditImageButton_Clicked" Margin="5" Grid.Row="0" HorizontalOptions="End" Source="{AppThemeBinding Dark=close_light_theme.svg, Light=close.svg}" WidthRequest="30" HeightRequest="30"/>
+                    <Label Grid.Row="0" Text="Profile edit" FontAttributes="Bold" FontSize="Body" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                    <BoxView Grid.Row="1" Style="{StaticResource defaultBoxView}"/>
+
+                    <Border Grid.Row="2" Style="{StaticResource defaultBorder}" Margin="10">
+                        <VerticalStackLayout>
+                            <Label Margin="2" Text="First name" HorizontalTextAlignment="Center"/>
+                            <BoxView Grid.Row="1" Style="{StaticResource defaultBoxView}" HeightRequest="2"/>
+                            <Editor x:Name="FirstNameEditor" Text="{Binding Author.FirstName}" TextChanged="UserDataEditor_TextChanged" Placeholder="Enter first name"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="3" Style="{StaticResource defaultBorder}" Margin="10">
+                        <VerticalStackLayout>
+                            <Label Margin="2" Text="Last name" HorizontalTextAlignment="Center"/>
+                            <BoxView Grid.Row="1" Style="{StaticResource defaultBoxView}" HeightRequest="2"/>
+                            <Editor x:Name="LastNameEditor" Text="{Binding Author.LastName}" TextChanged="UserDataEditor_TextChanged" Placeholder="Enter last name"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="4" Style="{StaticResource defaultBorder}" Margin="10">
+                        <VerticalStackLayout>
+                            <Label Margin="2" Text="Middle name" HorizontalTextAlignment="Center"/>
+                            <BoxView Grid.Row="1" Style="{StaticResource defaultBoxView}" HeightRequest="2"/>
+                            <Editor x:Name="MiddleNameEditor" Text="{Binding Author.MiddleName}" TextChanged="UserDataEditor_TextChanged" Placeholder="Enter middle name"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <BoxView  Grid.Row="5" Style="{StaticResource defaultBoxView}"/>
+                    <Button x:Name="SaveEditChangesButton" Clicked="SaveEditChangesButton_Clicked" Grid.Row="6" Margin="10" Text="Save changes"/>
+                    
+                </Grid>
+            </Border>
+            
+        </Grid>
+    </RefreshView>
+</ContentPage>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:Bibliomatic_MAUI_App.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:Bibliomatic_MAUI_App.Models"
+             xmlns:customControls="clr-namespace:Bibliomatic_MAUI_App.CustomControls"
+             x:DataType="viewModels:TestsViewModel"       
+             x:Class="Bibliomatic_MAUI_App.Views.TestsView"
+             x:Name="TestsViewPage"
+             Shell.NavBarIsVisible="False"
+             Title="TestsView">
+    
+    <StackLayout>              
+
+        <Border Style="{StaticResource defaultBorder}" Margin="5" VerticalOptions="FillAndExpand">
+
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshTestDataCommand}">
+
+                <CollectionView ItemsSource ="{Binding TestsList}"
+                                VerticalOptions="Fill"    
+                                RemainingItemsThreshold="{Binding RemainingItemsThreshold}"
+                                RemainingItemsThresholdReachedCommand="{Binding LoadMoreTestDataCommand}"
+                                SelectionMode="None"                     
+                                x:Name="ArticlesCollectionView">
+
+                    <CollectionView.Header>
+                        <VerticalStackLayout>
+                            <VerticalStackLayout Padding="10">
+                                <Label Text="Tests" FontSize="Large" FontAttributes="Bold" HorizontalTextAlignment="Start"/>
+                                <Label Text="Select test to check your knowledge level. Double tap to open test" HorizontalTextAlignment="Start" FontSize="Caption"/>
+                            </VerticalStackLayout>
+                            <BoxView Style="{StaticResource defaultBoxView}"/>
+                            <VerticalStackLayout VerticalOptions="Center" Margin="0,75" IsVisible="{Binding FailedLayoutVisible}">
+                                <Image Source="operation_failed.png"/>
+                                <Label Margin="5" Text="Failed to load tests. Please refresh page to try again or later" FontSize="Medium" HorizontalTextAlignment="Center" FontAttributes="Italic"/>
+                            </VerticalStackLayout>                            
+
+                            <toolkit:Expander Margin="10,5,10,0">
+
+                                <toolkit:Expander.Triggers>
+                                    <DataTrigger TargetType="toolkit:Expander" Binding="{Binding IsBusy}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="toolkit:Expander" Binding="{Binding IsRefreshing}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="toolkit:Expander" Binding="{Binding FailedLayoutVisible}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>                                    
+                                </toolkit:Expander.Triggers>
+
+                                <toolkit:Expander.Header>
+                                    <HorizontalStackLayout HorizontalOptions="End" Spacing="5">
+                                        <Label Text="Filters" FontSize="Header" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" />
+                                        <Image WidthRequest="30" HeightRequest="30" Source="{AppThemeBinding Light=filters.svg, Dark=filters_dark_theme.svg}"/>
+                                    </HorizontalStackLayout>
+                                </toolkit:Expander.Header>
+                                <Border Style="{StaticResource defaultBorder}">
+                                    <VerticalStackLayout Padding="10" Spacing="5">
+                                        <Border Style="{StaticResource defaultBorder}">
+                                            <Editor AutoSize="TextChanges" Placeholder="Enter test name" Text="{Binding NameFilter}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource defaultBorder}">
+                                            <Editor AutoSize="TextChanges" Placeholder="Enter test author" Text="{Binding AuthorFilter}"/>
+                                        </Border>
+                                        <Border Style="{StaticResource defaultBorder}">
+                                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto, Auto" Padding="5">
+                                                <Label Grid.ColumnSpan="2" Grid.Row="0" Text="By publish date" HorizontalTextAlignment="Center"/>
+                                                <RadioButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding ShowNewTestsFirstFilter}" Content="New tests first" HorizontalOptions="Center" GroupName="PublishDateFilter"/>
+                                                <RadioButton Grid.Column="1" Grid.Row="1" IsChecked="{Binding ShowOldTestsFirstFilter}" Content="Old tests first" HorizontalOptions="Center" GroupName="PublishDateFilter"/>
+                                            </Grid>
+                                        </Border>
+                                        <Border Style="{StaticResource defaultBorder}">                                            
+                                            <VerticalStackLayout Padding="5">
+                                                <Label Text="By test result" HorizontalTextAlignment="Center"/>
+                                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                                                    <RadioButton IsChecked="{Binding ShowAllTests}" Content="All" HorizontalOptions="Start" GroupName="TestResultFilter"/>
+                                                    <RadioButton IsChecked="{Binding ShowPassedTests}" Content="Passed" HorizontalOptions="Center" GroupName="TestResultFilter"/>
+                                                    <RadioButton IsChecked="{Binding ShowNotPassedTests}" Content="Not passed" HorizontalOptions="Center" GroupName="TestResultFilter"/>
+                                                </HorizontalStackLayout>
+                                                <Label Text="*Filters passed and not passed tests show tests created by other users" HorizontalTextAlignment="Center" FontSize="Caption"/>
+                                            </VerticalStackLayout>
+                                        </Border>
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                                            <Button Grid.Column="0" Command="{Binding FilterDataCommand}" Text="Filter data"/>
+                                            <Button Grid.Column="1" Command="{Binding ClearFiltersCommand}" Text="Clear filters"/>
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </toolkit:Expander>
+                            <ActivityIndicator HeightRequest="40"
+                                               WidthRequest="40"                                       
+                                               IsRunning="{Binding IsBusy}"
+                                               IsVisible="{Binding IsBusy}"/>
+                            <ActivityIndicator HeightRequest="40"
+                                               WidthRequest="40"                                       
+                                               IsRunning="{Binding IsFiltering}"
+                                               IsVisible="{Binding IsFiltering}"/>
+                            <VerticalStackLayout VerticalOptions="Center" Margin="0,75" IsVisible="{Binding NoContentLayoutVisible}">
+                                <Image Source="attachment_missing.png" HeightRequest="350"/>
+                                <Label Margin="5" Text="There is no tests here yet. All tests will be listed here. Please refresh page or change filters" FontSize="Medium" HorizontalTextAlignment="Center" FontAttributes="Italic"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </CollectionView.Header>
+
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+
+                        <DataTemplate x:DataType="models:TestResponse">
+
+                            <Border Style="{StaticResource defaultBorder}" Padding="13" Margin="5,10">
+
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference TestsViewPage}, Path=BindingContext.FailedLayoutVisible}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Border" Binding="{Binding Source={x:Reference TestsViewPage}, Path=BindingContext.NoContentLayoutVisible}" Value="True">
+                                        <Setter Property="IsVisible" Value="False"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+
+                                <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto" ColumnSpacing="5" RowSpacing="10" InputTransparent="True">
+
+                                    <Image Grid.Row="0" Grid.ColumnSpan="2" Source="{AppThemeBinding Light=test.svg, Dark=test_dark_theme.svg}" HeightRequest="100" Margin="5"/>
+
+                                    <Image Grid.Column="0" Grid.Row="1" Source="{AppThemeBinding Light=article_tab.svg, Dark=article_tab_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                                    <Label Grid.Column="1" Grid.Row="1" FontSize="14" Text="{Binding Name}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+
+                                    <Image Grid.Column="0" Grid.Row="2" Source="{AppThemeBinding Light=author.svg, Dark=author_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                                    <Label Grid.Column="1" Grid.Row="2" FontSize="14" Text="{Binding ShortAuthorName}" VerticalTextAlignment="Center" LineBreakMode="TailTruncation"/>
+
+                                    <Image Grid.Column="0" Grid.Row="3" Source="{AppThemeBinding Light=publish_date.svg, Dark=publish_date_dark_theme.svg}" HeightRequest="20" WidthRequest="20"/>
+                                    <Label Grid.Column="1" Grid.Row="3" FontSize="14" Text="{Binding UpdatedAtFormat}" VerticalTextAlignment="Center" />
+
+                                </Grid>
+
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference TestsViewPage}, Path=BindingContext.NavigateToTestInformationViewCommand}" 
+                                                          CommandParameter="{Binding .}"
+                                                          NumberOfTapsRequired="2"/>
+                                </Border.GestureRecognizers>
+
+                            </Border>
+
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.Footer>
+                        <ActivityIndicator HeightRequest="40"
+                                           WidthRequest="40"
+                                           IsRunning="{Binding IsLoading}"
+                                           IsVisible="{Binding IsLoading}"/>
+                    </CollectionView.Footer>
+
+                </CollectionView>
+
+            </RefreshView>
+            
+        </Border>
+
+    </StackLayout>
+    
+</ContentPage>

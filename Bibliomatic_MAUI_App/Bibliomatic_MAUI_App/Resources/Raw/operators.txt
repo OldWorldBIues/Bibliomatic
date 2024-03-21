@@ -1,0 +1,16 @@
+\pm;Plus-minus;operators_141_o.svg;2.5
+\times;Times;operators_142_o.svg;2.5
+\div;Division;operators_143_o.svg;2.5
+\neq;Not equal;operators_144_o.svg;2.5
+\approx;Approximate;operators_145_o.svg;2.5
+\equiv;Equivalent;operators_146_o.svg;2.5
+\not\equiv;Not equivalent;operators_147_o.svg;2.5
+\geq;Geqslant;operators_148_o.svg;2.5
+\gg;operators_149_o.svg;2.5
+\leq;Leqslant;operators_150_o.svg;2.5
+\ll;operators_151_o.svg;2.5
+\sim;Similar;operators_152_o.svg;2.5
+\simeq;operators_153_o.svg;2.5
+\cong;operators_154_o.svg;2.5
+\propto;Propto;operators_155_o.svg;2.5
+\perp;Perpendicularity;operators_156_o.svg;2.5
